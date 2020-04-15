@@ -21,3 +21,14 @@ body {
 .navbar-collapse {
   justify-content: flex-end;
 }
+
+body {
+  padding-top: 10px;
+}
+[class*="col-"], footer {
+  background-color: lightgreen;
+  border: 2px solid black;
+  border-radius: 6px;
+  line-height: 40px;
+  text-align: center;
+}
