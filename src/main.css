@@ -1,11 +1,13 @@
+/*--- body ---*/
 body {
-  padding: 0;
-  margin: 0;
-  background: #f2f6e9;
+  background-color :  #bdb39c 
 }
+
+
 /*--- navigation bar ---*/
 .navbar {
-  background:#6ab446;
+  background:#b49346;
+  margin-bottom: 20px;
 }
 .nav-link,
 .navbar-brand {
@@ -22,11 +24,16 @@ body {
   justify-content: flex-end;
 }
 
-body {
-  padding-top: 10px;
+
+/*--- container ---*/
+
+.container-fluid{
+  padding-left: 20px;
+  padding-right: 20px;
 }
+
 [class*="col-"], footer {
-  background-color: lightgreen;
+  background-color: #9cbd9f;
   border: 2px solid black;
   border-radius: 6px;
   line-height: 40px;
