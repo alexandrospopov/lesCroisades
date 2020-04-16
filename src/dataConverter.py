@@ -2,6 +2,17 @@ import os
 import pandas as pd
 import json
 
+def simplifyDictionary( d ):
+
+  for key in d:
+  
+    print( d[ key ] )
+
+    if len( d[ key ].keys() ) == 1:
+
+      d[ key ] =  d[ key ][ 0 ]
+
+
 
 def translateArmiesExcel( dataDirectory, jsonDirectory, dataName ):
 
@@ -22,7 +33,9 @@ def translateArmiesExcel( dataDirectory, jsonDirectory, dataName ):
                           sheet_name = None )
 
     for spreadsheet in data:
+
       data[ spreadsheet ] = data[ spreadsheet ].to_dict()
+      simplifyDictionary( data[ spreadsheet ] )
 
     fullDataJson[ dataFile.split( '.' )[ 0 ] ] = data
 
@@ -31,6 +44,8 @@ def translateArmiesExcel( dataDirectory, jsonDirectory, dataName ):
 
   with open( pathToFullDataJson, 'w') as fp:
     json.dump( fullDataJson, fp)
+
+  print( "Wrote %s ." % pathToFullDataJson )
 
 
 
