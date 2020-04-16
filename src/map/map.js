@@ -1,6 +1,3 @@
-console.log("bonjour  ")
-
-
 var map = new GMaps({
   el: '#googleMap',
   lat:  40.730610,
@@ -14,3 +11,6 @@ map.addMarker({
 });
 
 map.setZoom(8);
+
+
+// faire une map custom
