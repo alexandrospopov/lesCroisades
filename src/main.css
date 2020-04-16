@@ -3,7 +3,9 @@ body {
   background-color :  #bdb39c 
 }
 
-
+#mainRow{
+  height: 1200px;
+}
 /*--- navigation bar ---*/
 .navbar {
   background:#b49346;
