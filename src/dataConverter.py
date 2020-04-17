@@ -6,15 +6,13 @@ def simplifyDictionary( d ):
 
   for key in d:
   
-    print( d[ key ] )
-
     if len( d[ key ].keys() ) == 1:
 
       d[ key ] =  d[ key ][ 0 ]
 
 
 
-def translateArmiesExcel( dataDirectory, jsonDirectory, dataName ):
+def translateExcel( dataDirectory, jsonDirectory, dataName ):
 
   print( "Converting %s exceles : " % dataName)
 
@@ -56,6 +54,7 @@ if __name__ == "__main__" :
                                 "json" )
 
   if not os.path.isdir( jsonDirectory ):
-    os.makedirs( jsonDirectory, 755 )
+    os.mkdir( jsonDirectory )
 
-  translateArmiesExcel( dataDirectory, jsonDirectory, "armees" )
+  translateExcel( dataDirectory, jsonDirectory, "armees" )
+  translateExcel( dataDirectory, jsonDirectory, "villes" )
