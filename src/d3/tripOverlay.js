@@ -1,11 +1,33 @@
 // var overlayTrip = new google.maps.OverlayView();
 
+
+function plotTrip( trip )
+{
+  console.log( trip )
+
+}
+
+function plotAllArmyTrips( army )
+{
+  console.log( army )
+  for( let tripsNum in army.trajets.departArrivee )
+  {
+    trip = army.trajets.departArrivee[ tripsNum ]
+    plotTrip( trip )
+  }
+
+} 
+
 function showTrips()
 {
-  console.log("ici")
-  Promise.all([ d3.json( "json/armees.json" ) ]).then(function( d ) {
+
+  Promise.all([ d3.json( "json/armees.json" ) ]).then(function( armyList ) {
   {
-    console.log( d )
+    for( let armyId in armyList[0] )
+    {
+      army = armyList[ 0 ][ armyId ]
+      plotAllArmyTrips( army )
+    }
   }
 })
 }
