@@ -1,16 +1,11 @@
 var map = new GMaps({
   el: '#googleMap',
-  lat:  40.730610,
-  lng: -73.935242
+  lat:  38.11666,
+  lng: 13.36666
 });
 
-map.addMarker({
-  lat: 40.700610,
-  lng: -73.997242,
-  title: 'New York'
-});
 
-map.setZoom(8);
+map.setZoom(5.3);
 
 
 // faire une map custom
