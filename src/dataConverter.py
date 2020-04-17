@@ -50,8 +50,7 @@ def translateExcel( dataDirectory, jsonDirectory, dataName ):
 if __name__ == "__main__" : 
   
   dataDirectory = os.path.join( "..", "data" ) 
-  jsonDirectory = os.path.join( dataDirectory,
-                                "json" )
+  jsonDirectory = os.path.join( "json" )
 
   if not os.path.isdir( jsonDirectory ):
     os.mkdir( jsonDirectory )
