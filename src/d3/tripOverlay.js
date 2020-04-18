@@ -39,7 +39,6 @@ function plotAllArmyTrips( tripList )
               .text(function(d) { return d.key; });
     
           function transform(d) {
-            console.log(d)
             d = new google.maps.LatLng( d.value.startCityCoordinates[ 0 ],
                                         d.value.startCityCoordinates[ 1 ]);
             d = projection.fromLatLngToDivPixel(d);

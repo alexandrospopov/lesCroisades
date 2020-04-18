@@ -55,9 +55,44 @@ def getLatLongForCity( cityData, cityName ):
     cityData[ cityName ][ "Geographie" ][ "Longitude" ]
   ]
 
+def addCity( cityData, listAllCities, cityToAdd ):
+
+  listAllCityNames = [ city[ "cityName" ] for city in listAllCities ]
+
+  if cityToAdd not in listAllCityNames:
+
+    listAllCities.append(
+      {
+        "cityName" : cityToAdd,
+        "latLong" : getLatLongForCity( cityData, cityToAdd ) 
+      }
+    )
+
+def addTrip( listAllTrips, listAllCities, startCity, endCity, army ):
+
+  listAllTrips.append(
+    {
+      "source": getCityNum( listAllCities, startCity ),
+      "target" : getCityNum( listAllCities, endCity ),
+      "army" : army
+    }
+  )
+
+def getCityNum( listAllCities, cityToFind ):
+
+  for numCity, city in enumerate( listAllCities ):
+
+    if cityToFind == city[ "cityName" ]:
+
+      return numCity
+
+  else:
+
+    raise ValueError("%s not part of listAllCities." % cityToFind )
+
+
 def writeTripJson( jsonDirectory ):
   
-  listAllTrips = []
   pathToArmyJson = os.path.join( jsonDirectory, "armees.json")
   pathToCitiesJson = os.path.join( jsonDirectory, "villes.json")
   pathToTripJson = os.path.join( jsonDirectory, "trips.json")
@@ -68,25 +103,32 @@ def writeTripJson( jsonDirectory ):
   with open( pathToCitiesJson, 'r') as j:
     cityData = json.load( j )
 
+
+  listAllTrips = []
+  listAllCities = []
+
   for army in armyData:
 
     for tripNum in armyData[ army ][ "trajets" ][ "departArrivee" ]:
-
       
       startCity, endCity = armyData[ army ][ "trajets" ][ "departArrivee" ][ tripNum ].split( " - " )
 
-      listAllTrips.append(
-        {
-          "army" : army,
-          "startCity" : startCity,
-          "startCityCoordinates" : getLatLongForCity( cityData, startCity ),
-          "endCity" : endCity,
-          "endCityCoordinates" : getLatLongForCity( cityData, endCity )
-        }
-      )
+      addCity( cityData,listAllCities, startCity )
+      addCity( cityData, listAllCities, endCity )
+
+      print( listAllCities )
+
+      addTrip( listAllTrips, listAllCities, startCity, endCity, army )
+
+  dictAllCitiesAndTrips = {
+    "nodes" : listAllCities,
+    "links" : listAllTrips
+  }
+
+  print( dictAllCitiesAndTrips )
 
   with open( pathToTripJson, "w") as j:
-    json.dump( listAllTrips, j) 
+    json.dump( dictAllCitiesAndTrips, j) 
 
   print( "Wrote json/trip.json")
 
