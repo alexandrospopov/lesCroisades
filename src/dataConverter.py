@@ -46,6 +46,50 @@ def translateExcel( dataDirectory, jsonDirectory, dataName ):
   print( "Wrote %s ." % pathToFullDataJson )
 
 
+def getLatLongForCity( cityData, cityName ):
+
+  cityName = cityName.replace(" ","")
+  
+  return [ 
+    cityData[ cityName ][ "Geographie" ][ "Latitude" ],
+    cityData[ cityName ][ "Geographie" ][ "Longitude" ]
+  ]
+
+def writeTripJson( jsonDirectory ):
+  
+  listAllTrips = []
+  pathToArmyJson = os.path.join( jsonDirectory, "armees.json")
+  pathToCitiesJson = os.path.join( jsonDirectory, "villes.json")
+  pathToTripJson = os.path.join( jsonDirectory, "trips.json")
+
+  with open( pathToArmyJson, 'r') as j:
+    armyData = json.load( j )
+
+  with open( pathToCitiesJson, 'r') as j:
+    cityData = json.load( j )
+
+  for army in armyData:
+
+    for tripNum in armyData[ army ][ "trajets" ][ "departArrivee" ]:
+
+      
+      startCity, endCity = armyData[ army ][ "trajets" ][ "departArrivee" ][ tripNum ].split( " - " )
+
+      listAllTrips.append(
+        {
+          "army" : army,
+          "startCity" : startCity,
+          "startCityCoordinates" : getLatLongForCity( cityData, startCity ),
+          "endCity" : endCity,
+          "endCityCoordinates" : getLatLongForCity( cityData, endCity )
+        }
+      )
+
+  with open( pathToTripJson, "w") as j:
+    json.dump( listAllTrips, j) 
+
+  print( "Wrote json/trip.json")
+
 
 if __name__ == "__main__" : 
   
@@ -57,3 +101,5 @@ if __name__ == "__main__" :
 
   translateExcel( dataDirectory, jsonDirectory, "armees" )
   translateExcel( dataDirectory, jsonDirectory, "villes" )
+
+  writeTripJson( jsonDirectory )
