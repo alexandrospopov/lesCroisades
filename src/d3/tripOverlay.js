@@ -1,41 +1,25 @@
 // var overlayTrip = new google.maps.OverlayView();
 
 
-function plotTrip( trip, cityList )
+
+function plotAllArmyTrips( tripList )
 {
-  startTownName = trip.split(" - ")[ 0 ]
-  startTown = cityList[ startTownName ]
-
-  endTownName = trip.split(" - ")[ 1 ]
-  endTown = cityList[ startTownName ]
-  
-
-}
-
-function plotAllArmyTrips( army, cityList )
-{
-  for( let tripsNum in army.trajets.departArrivee )
-  {
-    trip = army.trajets.departArrivee[ tripsNum ]
-    plotTrip( trip, cityList )
-  }
-
+  console.log( tripList )
 } 
 
 function showTrips()
 {
 
-  Promise.all([ d3.json( "json/armees.json" ),
+  Promise.all([ d3.json( "json/trips.json" ),
+                d3.json( "json/armees.json" ),
                 d3.json( "json/villes.json" ), ]).then(function( files ) {
   {
-    armyList = files[ 0 ]
-    cityList = files[ 1 ]
+    tripList = files[ 0 ]
+    armyList = files[ 1 ]
+    cityList = files[ 2 ]
 
-    for( let armyId in armyList )
-    {
-      army = armyList[ armyId ]
-      plotAllArmyTrips( army, cityList )
-    }
+
+    plotAllArmyTrips( tripList )
   }
 })
 }
