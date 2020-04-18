@@ -6,6 +6,11 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
 });
 map.setZoom(5); 
 
+const mapDiv = d3.select( "#mainRow" );
+const width = +mapDiv.attr("width");
+const height = +mapDiv.attr("height");
+console.log(map, width, height)
+
 
 function plotAllArmyTrips( tripList )
 {
@@ -14,30 +19,36 @@ function plotAllArmyTrips( tripList )
         .attr("class", "stations");
 
     overlay.draw = function() {
-          var projection = this.getProjection(),
-              padding = 10;
-    
-          var marker = layer.selectAll("svg")
-              .data(d3.entries(tripList.nodes))
-              .each(transform) // update existing markers
-            .enter().append("svg")
-              .each(transform)
-              .attr("class", "marker");
+
+              
+      layer.select('svg').remove();
+      var svg = layer.append("svg")
+
+        
+      var projection = this.getProjection(),
+          padding = 10;
+
+      var node = svg.selectAll(".stations")
+          .data(d3.entries(tripList.nodes))
+          .each(transform) // update existing markers
+        .enter().append("g")
+          .each(transform)
+          .attr("class", "node");
     
           // Add a circle.
-          marker.append("circle")
+          node.append("circle")
               .attr("r", 8)
               .attr("cx", padding)
               .attr("cy", padding);
     
           // Add a label.
-          marker.append("text")
+          node.append("text")
               .attr("x", padding + 7)
               .attr("y", padding)
               .attr("dy", ".31em")
               .text(function(d) { return d.value.cityName; });
 
-          var link = layer.selectAll(".links")
+          var link = svg.selectAll(".link")
           .data(tripList.links)
           .enter().append("line")
           .attr("class", "link")
@@ -48,8 +59,7 @@ function plotAllArmyTrips( tripList )
                                         d.value.latLong[ 1 ]);
             d = projection.fromLatLngToDivPixel(d);
             return d3.select(this)
-                .style("left", (d.x - padding) + "px")
-                .style("top", (d.y - padding) + "px");
+              .attr("transform","translate(" + d.x + "," + d.y + ")");
           }
 
           function drawlink(d) {

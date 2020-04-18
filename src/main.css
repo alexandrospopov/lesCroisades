@@ -47,6 +47,14 @@ body {
   position: absolute;
 }
 
+.stations svg {
+  width: 1200px;
+  height: 600px;
+  padding-right: 10px;
+  font: 12px sans-serif;
+}
+
+
 .stations circle {
   fill: brown;
   stroke: black;
