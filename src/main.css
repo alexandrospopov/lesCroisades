@@ -41,3 +41,14 @@ body {
   line-height: 40px;
   text-align: center;
 }
+
+
+.stations, .stations svg {
+  position: absolute;
+}
+
+.stations circle {
+  fill: brown;
+  stroke: black;
+  stroke-width: 1.5px;
+} 
