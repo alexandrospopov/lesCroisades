@@ -9,7 +9,6 @@ map.setZoom(5);
 
 function plotAllArmyTrips( tripList )
 {
-  console.log( tripList )
   overlay.onAdd = function() {
     var layer = d3.select(this.getPanes().overlayLayer).append("div")
         .attr("class", "stations");
@@ -36,7 +35,13 @@ function plotAllArmyTrips( tripList )
               .attr("x", padding + 7)
               .attr("y", padding)
               .attr("dy", ".31em")
-              .text(function(d) { return d.key; });
+              .text(function(d) { return d.value.cityName; });
+
+          var link = layer.selectAll(".links")
+          .data(tripList.links)
+          .enter().append("line")
+          .attr("class", "link")
+          .each(drawlink);
     
           function transform(d) {
             d = new google.maps.LatLng( d.value.latLong[ 0 ],
@@ -45,6 +50,25 @@ function plotAllArmyTrips( tripList )
             return d3.select(this)
                 .style("left", (d.x - padding) + "px")
                 .style("top", (d.y - padding) + "px");
+          }
+
+          function drawlink(d) {
+            console.log( tripList.nodes[ d.source ].cityName,
+                         tripList.nodes[ d.target ].cityName )
+            p1 = new google.maps.LatLng( tripList.nodes[ d.source ].latLong[ 0 ],
+                                         tripList.nodes[ d.source ].latLong[ 1 ] )
+            p2 = new google.maps.LatLng( tripList.nodes[ d.target ].latLong[ 0 ],
+                                         tripList.nodes[ d.target ].latLong[ 1 ] )
+            p1 = projection.fromLatLngToDivPixel(p1);
+            p2 = projection.fromLatLngToDivPixel(p2);
+            console.log(this)
+            d3.select(this)
+              .attr('x1', p1.x)
+              .attr('y1', p1.y)
+              .attr('x2', p2.x) 
+              .attr('y2', p2.y)
+              .style('fill', 'red')
+              .style('stroke', 'steelblue');
           }
       } 
   }
@@ -55,9 +79,9 @@ function plotAllArmyTrips( tripList )
 function showTrips()
 {
 
-  Promise.all([ d3.json( "json/trips.json" ),
-                d3.json( "json/armees.json" ),
-                d3.json( "json/villes.json" ), ]).then(function( files ) {
+  Promise.all([ d3.json( "src/json/trips.json" ),
+                d3.json( "src/json/armees.json" ),
+                d3.json( "src/json/villes.json" ), ]).then(function( files ) {
   {
     tripList = files[ 0 ]
     armyList = files[ 1 ]

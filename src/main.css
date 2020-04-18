@@ -52,3 +52,8 @@ body {
   stroke: black;
   stroke-width: 1.5px;
 } 
+
+.links {
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
