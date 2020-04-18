@@ -19,7 +19,7 @@ function plotAllArmyTrips( tripList )
               padding = 10;
     
           var marker = layer.selectAll("svg")
-              .data(d3.entries(tripList))
+              .data(d3.entries(tripList.nodes))
               .each(transform) // update existing markers
             .enter().append("svg")
               .each(transform)
@@ -39,8 +39,8 @@ function plotAllArmyTrips( tripList )
               .text(function(d) { return d.key; });
     
           function transform(d) {
-            d = new google.maps.LatLng( d.value.startCityCoordinates[ 0 ],
-                                        d.value.startCityCoordinates[ 1 ]);
+            d = new google.maps.LatLng( d.value.latLong[ 0 ],
+                                        d.value.latLong[ 1 ]);
             d = projection.fromLatLngToDivPixel(d);
             return d3.select(this)
                 .style("left", (d.x - padding) + "px")
