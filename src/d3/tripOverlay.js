@@ -1,5 +1,40 @@
 var overlay;
 
+
+var data = {
+  "nodes": [{
+    "name": "A",
+    "long": 38.11666,
+    "lat": 13.36666
+  }, {
+    "name": "B",
+    "long": 38.11666,
+    "lat": 14.36666
+  }, {
+    "name": "C",
+    "long": 38.11666,
+    "lat": 15.36666
+  }, {
+    "name": "D",
+    "long": 38.11666,
+    "lat": 16.36666
+  }],
+  "links": [{
+    "source": 0,
+    "target": 1
+  }, {
+    "source": 0,
+    "target": 2
+  }, {
+    "source": 0,
+    "target": 3
+  }, {
+    "source": 2,
+    "target": 3
+  }]
+}
+
+
 myOverlay.prototype = new google.maps.OverlayView();
 
 function initialize(){
@@ -30,57 +65,56 @@ function myOverlay(bounds, image, map){
 }
 
 myOverlay.prototype.onAdd = function(){
-    var div = document.createElement('div');
-    div.setAttribute('id','myDiv');
-    div.style.borderStyle = 'solid';
-    div.style.borderWidth = '2px;';
-    div.style.background = 'none';
-    div.style.position = 'absolute';
-    div.style.color="blue"
-
-
-  Promise.all([ d3.json( "src/json/trips.json" ),
-                d3.json( "src/json/armees.json" ),
-                d3.json( "src/json/villes.json" ), ]).then(function( files ) {
-  {
-    tripList = files[ 0 ]
-    armyList = files[ 1 ]
-    cityList = files[ 2 ]
-
-    var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('id','theOneSVG')
-    svg.setAttribute('viewBox','0 0 1800 1200');
-    
-    var g = document.createElementNS('http://www.w3.org/2000/svg','g');
-    
-    // var rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
-    // g.appendChild(rect);
-    plotAllArmyTrips( tripList )
-
-    
-    svg.appendChild(g);
-    div.appendChild(svg);
-    
-
-  }
-})
-    
-    this.div_ = div;
-    var panes = this.getPanes();
-    panes.overlayLayer.appendChild(div);    
+  var div = document.createElement('div');
+  div.setAttribute('id','myDiv');
+  div.style.borderStyle = 'solid';
+  div.style.borderWidth = '2px;';
+  div.style.background = 'none';
+  div.style.position = 'absolute';
+  
+  var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  //svg.setAttribute('fill','#FFFFFF');
+  svg.setAttribute('viewBox','0 0 400 400');
+  
+  var g = document.createElementNS('http://www.w3.org/2000/svg','g');
+  
+  var rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  rect.setAttribute('id','myRect');
+  rect.setAttribute('height','181');
+  rect.setAttribute('width','311');
+  rect.setAttribute('y','95.25');
+  rect.setAttribute('x','47.75');
+  rect.setAttribute('stroke-width','5');
+  rect.setAttribute('fill','none');
+  rect.setAttribute('stroke','#FF0000');
+  g.appendChild(rect);
+  svg.appendChild(g);
+  //var img = this.image_;
+  div.appendChild(svg);
+  
+  this.div_ = div;
+  
+  var panes = this.getPanes();
+  panes.overlayLayer.appendChild(div);    
     
 };
 
 myOverlay.prototype.draw = function(){
-    var overlayProjection = this.getProjection();
-    var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
-    var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
-    
-    var div = this.div_;
-    div.style.left = sw.x + 'px';
-    div.style.top = ne.y + 'px';
-    div.style.width = (ne.x - sw.x) + 'px';
-    div.style.height = (sw.y - ne.y) + 'px';
+  var overlayProjection = this.getProjection();
+  var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
+  var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+  
+  var div = this.div_;
+  div.style.left = sw.x + 'px';
+  div.style.top = ne.y + 'px';
+  div.style.width = (ne.x - sw.x) + 'px';
+  div.style.height = (sw.y - ne.y) + 'px';
+};
+
+myOverlay.prototype.onRemove = function(){
+  this.div_.parentNode.removeChild(this.div_);
+  this.div_ = null;
+
 };
 
 myOverlay.prototype.onRemove = function(){
@@ -90,78 +124,3 @@ myOverlay.prototype.onRemove = function(){
 
 initialize();
 
-function plotAllArmyTrips( tripList )
-{
-    svg = d3.select("#theOneSVG")
-    var node = svg.selectAll(".stations")
-        .data(d3.entries(tripList.nodes))
-        .each(transform) // update existing markers
-      .enter().append("g")
-        .each(transform)
-        .attr("class", "node");
-  
-        // Add a circle.
-        node.append("circle")
-            .attr("r", 8);
-  
-        // Add a label.
-        node.append("text")
-            .attr("x", 10 + 7)
-            .attr("y", 10)
-            .attr("dy", ".31em")
-            .text(function(d) { return d.value.cityName; });
-
-        var link = svg.selectAll(".link")
-        .data(tripList.links)
-        .enter().append("line")
-        .attr("class", "link")
-        .each(drawlink);
-        console.log(tripList)
-  
-        function transform(d) {
-          d = new google.maps.LatLng( d.value.latLong[ 0 ],
-                                      d.value.latLong[ 1 ]);
-          d = projection.fromLatLngToDivPixel(d);
-          return d3.select(this)
-            .attr("transform","translate(" + d.x + "," + d.y + ")");
-        }
-
-        function drawlink(d) {
-          console.log( tripList.nodes[ d.source ].cityName,
-                        tripList.nodes[ d.target ].cityName )
-          p1 = new google.maps.LatLng( tripList.nodes[ d.source ].latLong[ 0 ],
-                                        tripList.nodes[ d.source ].latLong[ 1 ] )
-          p2 = new google.maps.LatLng( tripList.nodes[ d.target ].latLong[ 0 ],
-                                        tripList.nodes[ d.target ].latLong[ 1 ] )
-          p1 = projection.fromLatLngToDivPixel(p1);
-          p2 = projection.fromLatLngToDivPixel(p2);
-          console.log(this)
-          d3.select(this)
-            .attr('x1', p1.x)
-            .attr('y1', p1.y)
-            .attr('x2', p2.x) 
-            .attr('y2', p2.y)
-            .style('fill', 'red')
-            .style('stroke', 'steelblue');
-  }
-} 
-
-
-// function showTrips()
-// {
-
-//   Promise.all([ d3.json( "src/json/trips.json" ),
-//                 d3.json( "src/json/armees.json" ),
-//                 d3.json( "src/json/villes.json" ), ]).then(function( files ) {
-//   {
-//     tripList = files[ 0 ]
-//     armyList = files[ 1 ]
-//     cityList = files[ 2 ]
-
-
-//     plotAllArmyTrips( tripList )
-//   }
-// })
-// }
-
-// showTrips()

@@ -48,15 +48,11 @@ body {
 }
 
 
+
 .stations {
-  position: absolute;
-}
-
-
-.stations circle {
   fill: brown;
   stroke: black;
-  stroke-width: 1.5px;
+  stroke-width: 5px;
 } 
 
 .link {
