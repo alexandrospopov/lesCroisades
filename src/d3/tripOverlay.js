@@ -23,7 +23,7 @@ function plotAllArmyTrips( tripList )
               
       layer.select('svg').remove();
       var svg = layer.append("svg")
-
+                     .attr('viewBox','0 0 1800 1200');
         
       var projection = this.getProjection(),
           padding = 10;

@@ -6,6 +6,11 @@ body {
 #mainRow{
   height: 1200px;
 }
+
+#googleMap{
+  height: 1200px;
+  width: 1800px;
+}
 /*--- navigation bar ---*/
 .navbar {
   background:#b49346;
@@ -43,15 +48,8 @@ body {
 }
 
 
-.stations, .stations svg {
+.stations {
   position: absolute;
-}
-
-.stations svg {
-  width: 1200px;
-  height: 600px;
-  padding-right: 10px;
-  font: 12px sans-serif;
 }
 
 
