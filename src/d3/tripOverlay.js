@@ -37,22 +37,35 @@ myOverlay.prototype.onAdd = function(){
     div.style.background = 'none';
     div.style.position = 'absolute';
     div.style.color="blue"
-    
+
+
+  Promise.all([ d3.json( "src/json/trips.json" ),
+                d3.json( "src/json/armees.json" ),
+                d3.json( "src/json/villes.json" ), ]).then(function( files ) {
+  {
+    tripList = files[ 0 ]
+    armyList = files[ 1 ]
+    cityList = files[ 2 ]
+
     var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-    //svg.setAttribute('fill','#FFFFFF');
+    svg.setAttribute('id','theOneSVG')
     svg.setAttribute('viewBox','0 0 1800 1200');
     
     var g = document.createElementNS('http://www.w3.org/2000/svg','g');
     
     // var rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
-
     // g.appendChild(rect);
+    plotAllArmyTrips( tripList )
+
+    
     svg.appendChild(g);
-    //var img = this.image_;
     div.appendChild(svg);
     
-    this.div_ = div;
+
+  }
+})
     
+    this.div_ = div;
     var panes = this.getPanes();
     panes.overlayLayer.appendChild(div);    
     
@@ -76,3 +89,79 @@ myOverlay.prototype.onRemove = function(){
 };
 
 initialize();
+
+function plotAllArmyTrips( tripList )
+{
+    svg = d3.select("#theOneSVG")
+    var node = svg.selectAll(".stations")
+        .data(d3.entries(tripList.nodes))
+        .each(transform) // update existing markers
+      .enter().append("g")
+        .each(transform)
+        .attr("class", "node");
+  
+        // Add a circle.
+        node.append("circle")
+            .attr("r", 8);
+  
+        // Add a label.
+        node.append("text")
+            .attr("x", 10 + 7)
+            .attr("y", 10)
+            .attr("dy", ".31em")
+            .text(function(d) { return d.value.cityName; });
+
+        var link = svg.selectAll(".link")
+        .data(tripList.links)
+        .enter().append("line")
+        .attr("class", "link")
+        .each(drawlink);
+        console.log(tripList)
+  
+        function transform(d) {
+          d = new google.maps.LatLng( d.value.latLong[ 0 ],
+                                      d.value.latLong[ 1 ]);
+          d = projection.fromLatLngToDivPixel(d);
+          return d3.select(this)
+            .attr("transform","translate(" + d.x + "," + d.y + ")");
+        }
+
+        function drawlink(d) {
+          console.log( tripList.nodes[ d.source ].cityName,
+                        tripList.nodes[ d.target ].cityName )
+          p1 = new google.maps.LatLng( tripList.nodes[ d.source ].latLong[ 0 ],
+                                        tripList.nodes[ d.source ].latLong[ 1 ] )
+          p2 = new google.maps.LatLng( tripList.nodes[ d.target ].latLong[ 0 ],
+                                        tripList.nodes[ d.target ].latLong[ 1 ] )
+          p1 = projection.fromLatLngToDivPixel(p1);
+          p2 = projection.fromLatLngToDivPixel(p2);
+          console.log(this)
+          d3.select(this)
+            .attr('x1', p1.x)
+            .attr('y1', p1.y)
+            .attr('x2', p2.x) 
+            .attr('y2', p2.y)
+            .style('fill', 'red')
+            .style('stroke', 'steelblue');
+  }
+} 
+
+
+// function showTrips()
+// {
+
+//   Promise.all([ d3.json( "src/json/trips.json" ),
+//                 d3.json( "src/json/armees.json" ),
+//                 d3.json( "src/json/villes.json" ), ]).then(function( files ) {
+//   {
+//     tripList = files[ 0 ]
+//     armyList = files[ 1 ]
+//     cityList = files[ 2 ]
+
+
+//     plotAllArmyTrips( tripList )
+//   }
+// })
+// }
+
+// showTrips()
