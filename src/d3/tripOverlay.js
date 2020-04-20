@@ -37,9 +37,7 @@ function plotAllArmyTrips( tripList )
     
           // Add a circle.
           node.append("circle")
-              .attr("r", 8)
-              .attr("cx", padding)
-              .attr("cy", padding);
+              .attr("r", 8);
     
           // Add a label.
           node.append("text")
