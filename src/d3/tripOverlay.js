@@ -54,7 +54,7 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
   overlay.onAdd = function() {
     var layer = d3.select(this.getPanes().overlayMouseTarget)
         .append("svg")
-        .attr('class','stations');
+        .attr('id','canvas');
     overlay.draw = function(){
       var projection = this.getProjection(),
           sw = projection.fromLatLngToDivPixel(bounds.getSouthWest()),
@@ -65,7 +65,7 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
       ne.x += padding;
       ne.y -= padding;
 
-      d3.select('.stations')
+      d3.select('#canvas')
         .attr('width',(ne.x - sw.x) + 'px')
         .attr('height',(sw.y - ne.y) + 'px')
         .style('position','absolute')
@@ -79,8 +79,7 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
         .attr('class','marker')
         .attr('r',r)
         .attr('cx',function(d) {
-          console.log(d.value)
-          d = projection.fromLatLngToDivPixel( d.value.lat_lng);
+          d = projection.fromLatLngToDivPixel( d.value.lat_lng );
           return d.x-sw.x;
         })
         .attr('cy',function(d) {
