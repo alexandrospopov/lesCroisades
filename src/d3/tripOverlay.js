@@ -129,10 +129,9 @@ function setNorthEast( projection,  bounds, padding){
 }
 
 function printTripInformations( d ){
-   d3.select("#informationPanel")
-    .append("paragraph")
-    .attr( "class", "info")
-    .text("salug BG");
+  console.log(d)
+   d3.select("#additionalInfo")
+    .text( d.description );
 }
 
 function visibleTripTooltip( d, tooltip, tripList ){
