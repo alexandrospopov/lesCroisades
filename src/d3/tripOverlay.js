@@ -7,7 +7,7 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
 });
 
 
-minimalRadius = 4.5
+minimalRadius = 10
 var sw = 0;
 var ne = 0;
 
@@ -52,19 +52,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           .attr("class", "tooltip")
           .style("opacity", 0);
 
-
-        layer.selectAll( '.marker' )
-                .data(d3.entries( tripList.nodes ))
-                .each( drawMarker )
-              .enter().append( 'circle' )
-                .attr( 'class', 'marker' )
-                .attr( 'r' , minimalRadius )
-                .each( drawMarker)
-                .append( 'title' ).text(function( d ){
-            return d.value.cityName;
-          });
-
-
         layer.selectAll( ".link" )
                .data( tripList.links )
                .each( drawlink )
@@ -72,8 +59,18 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .attr( "class", "link")
                .each( drawlink )
                .style('stroke', d =>  armyList[ d.army ].admin.color )
-               .on("mouseover", d => visibleTooltip(d, tooltip, tripList))
+               .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
                .on("click", d => printTripInformations( d ) )
+               .on("mouseout", d => hideToolTip( tooltip ));
+
+        layer.selectAll( '.marker' )
+               .data(d3.entries( tripList.nodes ))
+               .each( drawMarker )
+             .enter().append( 'circle' )
+               .attr( 'class', 'marker' )
+               .attr( 'r' , minimalRadius )
+               .each( drawMarker)
+               .on("mouseover", d => visibleCityTooltip(d, tooltip, tripList))
                .on("mouseout", d => hideToolTip( tooltip ));
 
           function drawlink( d ) {
@@ -138,10 +135,7 @@ function printTripInformations( d ){
     .text("salug BG");
 }
 
-function visibleTooltip( d, tooltip, tripList ){
-  console.log(d.army)
-  console.log(tripList)
-  console.log(tripList.nodes[ d.target ].cityName)
+function visibleTripTooltip( d, tooltip, tripList ){
   tooltip.style("left", (d3.event.pageX + 5) + "px")
          .style("top", (d3.event.pageY - 28) + "px")
          .html( d.army + "<br>" 
@@ -151,7 +145,16 @@ function visibleTooltip( d, tooltip, tripList ){
          .style("opacity", .9);
 }
 
+function visibleCityTooltip( d, tooltip, tripList ){
+  tooltip.style("left", (d3.event.pageX + 5) + "px")
+         .style("top", (d3.event.pageY - 28) + "px")
+         .html( d.value.cityName)
+         .transition()
+         .style("opacity", .9);
+}
+
 function hideToolTip( tooltip ){ 
   tooltip.transition()
          .style("opacity", 0) 
+         
 }
