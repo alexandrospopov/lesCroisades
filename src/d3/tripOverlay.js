@@ -22,7 +22,7 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
     var bounds = new google.maps.LatLngBounds();
     d3.entries(tripList.nodes).forEach(function(d){
       console.log(d.value)
-      bounds.extend(d.value.lat_lng = new google.maps.LatLng( d.value.latLong[0], 
+      bounds.extend(d.value.latLong = new google.maps.LatLng( d.value.latLong[0], 
                                                               d.value.latLong[1]));
     });
     map.fitBounds(bounds);
@@ -67,11 +67,11 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
             return d.y-ne.y;
           })
           .append('title').text(function(d){
-            return d.key;
+            return d.value.cityName;
           });
 
         function transform(d) {
-          d = projection.fromLatLngToDivPixel(d.value.lat_lng);
+          d = projection.fromLatLngToDivPixel(d.value.latLong);
           return d3.select(this)
             .attr('cx',d.x-sw.x)
             .attr('cy',d.y-ne.y);
