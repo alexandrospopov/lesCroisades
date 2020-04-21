@@ -68,13 +68,15 @@ def addCity( cityData, listAllCities, cityToAdd ):
       }
     )
 
-def addTrip( listAllTrips, listAllCities, startCity, endCity, army ):
+def addTrip( listAllTrips, listAllCities, startCity, endCity, army, nombre, description ):
 
   listAllTrips.append(
     {
       "source": getCityNum( listAllCities, startCity ),
       "target" : getCityNum( listAllCities, endCity ),
-      "army" : army
+      "army" : army,
+      "nombre" : nombre,
+      "description" : description
     }
   )
 
@@ -118,7 +120,11 @@ def writeTripJson( jsonDirectory ):
 
       print( listAllCities )
 
-      addTrip( listAllTrips, listAllCities, startCity, endCity, army )
+      addTrip( listAllTrips, listAllCities, 
+               startCity, endCity, 
+               army,
+               armyData[ army ][ "trajets" ][ "nombre" ][ tripNum ],
+               armyData[ army ][ "trajets" ][ "description" ][ tripNum ] )
 
   dictAllCitiesAndTrips = {
     "nodes" : listAllCities,
