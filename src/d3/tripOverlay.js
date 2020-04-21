@@ -11,6 +11,10 @@ minimalRadius = 4.5
 var sw = 0;
 var ne = 0;
 
+var tripList = []
+var armyList = []
+var cityList = []
+
 Promise.all([ d3.json( "src/json/trips.json" ),
               d3.json( "src/json/armees.json" ),
               d3.json( "src/json/villes.json" ), ]).then(function( files ) 
@@ -31,13 +35,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
       overlay.draw = function(){
         var projection = this.getProjection();
-        sw = projection.fromLatLngToDivPixel(bounds.getSouthWest()),
-        ne = projection.fromLatLngToDivPixel(bounds.getNorthEast());
-        const padding = minimalRadius * 2 
-        sw.x -= padding;
-        sw.y += padding;
-        ne.x += padding;
-        ne.y -= padding;
+
+        sw = setSouthWest( projection, bounds, minimalRadius * 2  )
+        ne = setNorthEast( projection, bounds, minimalRadius * 2  )
 
         d3.select('#canvas')
           .attr( 'width' , ( ne.x - sw.x ) + 'px')
@@ -46,35 +46,26 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           .style( 'left', sw.x + 'px' )
           .style( 'top', ne.y +'px' );
 
-        var marker = layer.selectAll('.marker')
-          .data(d3.entries( tripList.nodes ))
-          .each(transform)
-        .enter().append('circle')
-          .attr('class','marker')
-          .attr('r', minimalRadius )
-          .attr('cx', function( d ) {
-            d = projection.fromLatLngToDivPixel( d.value.latLong );
-            d = ajustForBounds( d );
-            return d.x ;
-          })
-          .attr('cy',function( d ) {
-            d = projection.fromLatLngToDivPixel( d.value.latLong );
-            d = ajustForBounds( d )
-            return d.y ;
-          })
-          .append('title').text(function(d){
+        layer.selectAll( '.marker' )
+                .data(d3.entries( tripList.nodes ))
+                .each( drawMarker )
+              .enter().append( 'circle' )
+                .attr( 'class', 'marker' )
+                .attr( 'r' , minimalRadius )
+                .each( drawMarker)
+                .append( 'title' ).text(function( d ){
             return d.value.cityName;
           });
 
-          var link = layer.selectAll(".link")
-                        .data( tripList.links )
-                        .each( drawlink )
-                        .enter().append("line")
-                        .attr("class", "link")
-                        .each( drawlink )
-                        .style('stroke', d =>  armyList[ d.army ].admin.color );
+        layer.selectAll( ".link" )
+               .data( tripList.links )
+               .each( drawlink )
+             .enter().append( "line" )
+               .attr( "class", "link")
+               .each( drawlink )
+               .style('stroke', d =>  armyList[ d.army ].admin.color );
 
-          function drawlink(d) {
+          function drawlink( d ) {
             p1 = projection.fromLatLngToDivPixel( tripList.nodes[ d.source ].latLong );
             p2 = projection.fromLatLngToDivPixel( tripList.nodes[ d.target ].latLong );
             p1 = ajustForBounds( p1 )
@@ -83,11 +74,10 @@ Promise.all([ d3.json( "src/json/trips.json" ),
               .attr('x1', p1.x + 'px')
               .attr('y1', p1.y + 'px')
               .attr('x2', p2.x + 'px') 
-              .attr('y2', p2.y + 'px')
-              ;  
+              .attr('y2', p2.y + 'px');  
           }
 
-        function transform(d) {
+        function drawMarker(d) {
           d = projection.fromLatLngToDivPixel(d.value.latLong);
           return d3.select(this)
             .attr('cx',d.x-sw.x)
@@ -98,7 +88,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
       };
     };
 
-  // Bind our overlay to the map…
   overlay.setMap(map);
 
 })
@@ -117,4 +106,18 @@ function ajustForBounds( d ){
   d.x -= sw.x
   d.y -= ne.y
   return d 
+}
+
+function setSouthWest( projection, bounds, padding){
+  var sw = projection.fromLatLngToDivPixel(bounds.getSouthWest());
+  sw.x -= padding;
+  sw.y += padding;
+  return sw;
+}
+
+function setNorthEast( projection,  bounds, padding){
+  var ne = projection.fromLatLngToDivPixel(bounds.getNorthEast());
+  ne.x += padding;
+  ne.y -= padding;
+  return ne;
 }
