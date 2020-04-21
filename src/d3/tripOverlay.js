@@ -72,7 +72,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .attr( "class", "link")
                .each( drawlink )
                .style('stroke', d =>  armyList[ d.army ].admin.color )
-               .on("mouseover", d => visibleTooltip(d, tooltip))
+               .on("mouseover", d => visibleTooltip(d, tooltip, tripList))
                .on("click", d => printTripInformations( d ) )
                .on("mouseout", d => hideToolTip( tooltip ));
 
@@ -138,16 +138,20 @@ function printTripInformations( d ){
     .text("salug BG");
 }
 
-function visibleTooltip( d, tooltip ){
+function visibleTooltip( d, tooltip, tripList ){
+  console.log(d.army)
+  console.log(tripList)
+  console.log(tripList.nodes[ d.target ].cityName)
   tooltip.style("left", (d3.event.pageX + 5) + "px")
          .style("top", (d3.event.pageY - 28) + "px")
-         .html( "salut toi")
+         .html( d.army + "<br>" 
+                + "De : " + tripList.nodes[ d.source ].cityName + "<br>"
+                + "Vers : " + tripList.nodes[ d.target ].cityName + "." )
          .transition()
-         .style("opacity", .9)
-
-    ;
+         .style("opacity", .9);
 }
 
 function hideToolTip( tooltip ){ 
   tooltip.transition()
-         .style("opacity", 0) }
+         .style("opacity", 0) 
+}

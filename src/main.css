@@ -63,10 +63,10 @@ body {
 .tooltip{
   position: absolute;			
   text-align: center;			
-  width: 120px;					
-  height: 80px;					
+  width: 350px;					
+  height: 100px;					
   padding: 2px;				
-  font: 12px sans-serif;		
+  font: 25px sans-serif;		
   background: lightsteelblue;	
   border: 0px;		
   border-radius: 8px;			
