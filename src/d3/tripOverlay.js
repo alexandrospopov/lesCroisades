@@ -70,6 +70,26 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
             return d.value.cityName;
           });
 
+          var link = layer.selectAll(".link")
+                        .data( tripList.links )
+                        .each( drawlink )
+                        .enter().append("line")
+                        .attr("class", "link")
+                        .each(drawlink);
+
+          function drawlink(d) {
+            p1 = projection.fromLatLngToDivPixel( tripList.nodes[ d.source ].latLong );
+            p2 = projection.fromLatLngToDivPixel( tripList.nodes[ d.target ].latLong );
+            d3.select(this)
+              .attr('x1', p1.x - sw.x +'px')
+              .attr('y1', p1.y - ne.y +'px')
+              .attr('x2', p2.x - sw.x +'px') 
+              .attr('y2', p2.y - ne.y +'px')
+              .style('fill', 'red')
+              .style('stroke', 'steelblue');  
+          }
+
+
         function transform(d) {
           d = projection.fromLatLngToDivPixel(d.value.latLong);
           return d3.select(this)
