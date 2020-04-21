@@ -11,10 +11,6 @@ minimalRadius = 4.5
 var sw = 0;
 var ne = 0;
 
-var tripList = []
-var armyList = []
-var cityList = []
-
 Promise.all([ d3.json( "src/json/trips.json" ),
               d3.json( "src/json/armees.json" ),
               d3.json( "src/json/villes.json" ), ]).then(function( files ) 
@@ -80,8 +76,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         function drawMarker(d) {
           d = projection.fromLatLngToDivPixel(d.value.latLong);
           return d3.select(this)
-            .attr('cx',d.x-sw.x)
-            .attr('cy',d.y-ne.y);
+            .attr( 'cx' , d.x - sw.x )
+            .attr( 'cy' , d.y - ne.y );
         }
 
 
