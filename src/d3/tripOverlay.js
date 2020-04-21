@@ -24,11 +24,15 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
     var overlay = new google.maps.OverlayView();
     overlay.onAdd = function() {
-
-      var layer = d3.select(this.getPanes().overlayMouseTarget)
+      var tooltip = d3.select(this.getPanes().overlayMouseTarget )
+          .append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 0);
+      var layer = d3.select(this.getPanes().overlayMouseTarget )
           .append("svg")
           .attr('id','canvas');
 
+      
       overlay.draw = function(){
         var projection = this.getProjection();
 
@@ -42,6 +46,13 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           .style( 'left', sw.x + 'px' )
           .style( 'top', ne.y +'px' );
 
+
+        var tooltip = d3.select("body")
+          .append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 0);
+
+
         layer.selectAll( '.marker' )
                 .data(d3.entries( tripList.nodes ))
                 .each( drawMarker )
@@ -53,6 +64,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             return d.value.cityName;
           });
 
+
         layer.selectAll( ".link" )
                .data( tripList.links )
                .each( drawlink )
@@ -60,7 +72,11 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .attr( "class", "link")
                .each( drawlink )
                .style('stroke', d =>  armyList[ d.army ].admin.color )
-               .on("mouseover", d => console.log(d) )
+               .on("mouseover", d => {
+                  tooltip.transition()
+                         .style("opacity", .9)
+                         .style("left", (d3.event.pageX + 5) + "px")
+                         .style("top", (d3.event.pageY - 28) + "px"); } )
                .on("click", d => printTripInformations( d ) );
 
           function drawlink( d ) {
@@ -123,4 +139,13 @@ function printTripInformations( d ){
     .append("paragraph")
     .attr( "class", "info")
     .text("salug BG");
+}
+
+function visibleTooltip( d ){
+  console.log(d)
+  console.log(d3.event.pageX + 5)
+  d3.select('#tooltip')
+    .style("opacity", .9)
+    .style("left", (d3.event.pageX + 5) + "px")
+    .style("top", (d3.event.pageY - 28) + "px");
 }
