@@ -8,6 +8,8 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
 
 
 minimalRadius = 4.5
+var sw = 0;
+var ne = 0;
 
 Promise.all([ d3.json( "src/json/trips.json" ),
               d3.json( "src/json/armees.json" ),
@@ -28,14 +30,14 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           .attr('id','canvas');
 
       overlay.draw = function(){
-        var projection = this.getProjection(),
-            sw = projection.fromLatLngToDivPixel(bounds.getSouthWest()),
-            ne = projection.fromLatLngToDivPixel(bounds.getNorthEast());
-            const padding = minimalRadius * 2 
-            sw.x -= padding;
-            sw.y += padding;
-            ne.x += padding;
-            ne.y -= padding;
+        var projection = this.getProjection();
+        sw = projection.fromLatLngToDivPixel(bounds.getSouthWest()),
+        ne = projection.fromLatLngToDivPixel(bounds.getNorthEast());
+        const padding = minimalRadius * 2 
+        sw.x -= padding;
+        sw.y += padding;
+        ne.x += padding;
+        ne.y -= padding;
 
         d3.select('#canvas')
           .attr( 'width' , ( ne.x - sw.x ) + 'px')
@@ -69,11 +71,10 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                         .each( drawlink )
                         .enter().append("line")
                         .attr("class", "link")
-                        .each( drawlink );
+                        .each( drawlink )
+                        .style('stroke', d =>  armyList[ d.army ].admin.color );
 
           function drawlink(d) {
-            console.log()
-            console.log(d)
             p1 = projection.fromLatLngToDivPixel( tripList.nodes[ d.source ].latLong );
             p2 = projection.fromLatLngToDivPixel( tripList.nodes[ d.target ].latLong );
             p1 = ajustForBounds( p1 )
@@ -83,7 +84,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
               .attr('y1', p1.y + 'px')
               .attr('x2', p2.x + 'px') 
               .attr('y2', p2.y + 'px')
-              .style('stroke', d =>  armyList[ d.army ].admin.color );  
+              ;  
           }
 
         function transform(d) {
@@ -93,11 +94,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             .attr('cy',d.y-ne.y);
         }
 
-        function ajustForBounds( d ){
-          d.x -= sw.x
-          d.y -= ne.y
-          return d 
-        }
+
       };
     };
 
@@ -114,4 +111,10 @@ function setBounds( nodes ){
                                                             d.value.latLong[1]));
   });
   return bounds
+}
+
+function ajustForBounds( d ){
+  d.x -= sw.x
+  d.y -= ne.y
+  return d 
 }
