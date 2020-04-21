@@ -72,12 +72,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .attr( "class", "link")
                .each( drawlink )
                .style('stroke', d =>  armyList[ d.army ].admin.color )
-               .on("mouseover", d => {
-                  tooltip.transition()
-                         .style("opacity", .9)
-                         .style("left", (d3.event.pageX + 5) + "px")
-                         .style("top", (d3.event.pageY - 28) + "px"); } )
-               .on("click", d => printTripInformations( d ) );
+               .on("mouseover", d => visibleTooltip(d, tooltip))
+               .on("click", d => printTripInformations( d ) )
+               .on("mouseout", d => hideToolTip( tooltip ));
 
           function drawlink( d ) {
             p1 = projection.fromLatLngToDivPixel( tripList.nodes[ d.source ].latLong );
@@ -141,11 +138,16 @@ function printTripInformations( d ){
     .text("salug BG");
 }
 
-function visibleTooltip( d ){
-  console.log(d)
-  console.log(d3.event.pageX + 5)
-  d3.select('#tooltip')
-    .style("opacity", .9)
-    .style("left", (d3.event.pageX + 5) + "px")
-    .style("top", (d3.event.pageY - 28) + "px");
+function visibleTooltip( d, tooltip ){
+  tooltip.style("left", (d3.event.pageX + 5) + "px")
+         .style("top", (d3.event.pageY - 28) + "px")
+         .html( "salut toi")
+         .transition()
+         .style("opacity", .9)
+
+    ;
 }
+
+function hideToolTip( tooltip ){ 
+  tooltip.transition()
+         .style("opacity", 0) }
