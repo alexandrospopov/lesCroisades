@@ -59,7 +59,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
              .enter().append( "line" )
                .attr( "class", "link")
                .each( drawlink )
-               .style('stroke', d =>  armyList[ d.army ].admin.color );
+               .style('stroke', d =>  armyList[ d.army ].admin.color )
+               .on("mouseover", d => console.log(d) );
 
           function drawlink( d ) {
             p1 = projection.fromLatLngToDivPixel( tripList.nodes[ d.source ].latLong );
