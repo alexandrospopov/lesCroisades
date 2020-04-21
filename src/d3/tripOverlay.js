@@ -60,7 +60,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .attr( "class", "link")
                .each( drawlink )
                .style('stroke', d =>  armyList[ d.army ].admin.color )
-               .on("mouseover", d => console.log(d) );
+               .on("mouseover", d => console.log(d) )
+               .on("click", d => printTripInformations( d ) );
 
           function drawlink( d ) {
             p1 = projection.fromLatLngToDivPixel( tripList.nodes[ d.source ].latLong );
@@ -80,8 +81,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             .attr( 'cx' , d.x - sw.x )
             .attr( 'cy' , d.y - ne.y );
         }
-
-
       };
     };
 
@@ -117,4 +116,11 @@ function setNorthEast( projection,  bounds, padding){
   ne.x += padding;
   ne.y -= padding;
   return ne;
+}
+
+function printTripInformations( d ){
+   d3.select("#informationPanel")
+    .append("paragraph")
+    .attr( "class", "info")
+    .text("salug BG");
 }
