@@ -7,10 +7,12 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
 });
 
 
-  Promise.all([ d3.json( "src/json/trips.json" ),
-                d3.json( "src/json/armees.json" ),
-                d3.json( "src/json/villes.json" ), ]).then(function( files ) 
-  {
+minimalRadius = 4.5
+
+Promise.all([ d3.json( "src/json/trips.json" ),
+              d3.json( "src/json/armees.json" ),
+              d3.json( "src/json/villes.json" ), ]).then(function( files ) 
+{
     tripList = files[ 0 ]
     armyList = files[ 1 ]
     cityList = files[ 2 ]
@@ -18,23 +20,22 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
     bounds = setBounds( tripList.nodes )
     map.fitBounds( bounds );
 
-    var overlay = new google.maps.OverlayView(),
-        r = 4.5,
-        padding = r*2;
+    var overlay = new google.maps.OverlayView();
     overlay.onAdd = function() {
 
       var layer = d3.select(this.getPanes().overlayMouseTarget)
           .append("svg")
           .attr('id','canvas');
+
       overlay.draw = function(){
         var projection = this.getProjection(),
             sw = projection.fromLatLngToDivPixel(bounds.getSouthWest()),
             ne = projection.fromLatLngToDivPixel(bounds.getNorthEast());
-        // extend the boundaries so that markers on the edge aren't cut in half
-        sw.x -= padding;
-        sw.y += padding;
-        ne.x += padding;
-        ne.y -= padding;
+            const padding = minimalRadius * 2 
+            sw.x -= padding;
+            sw.y += padding;
+            ne.x += padding;
+            ne.y -= padding;
 
         d3.select('#canvas')
           .attr( 'width' , ( ne.x - sw.x ) + 'px')
@@ -48,7 +49,7 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
           .each(transform)
         .enter().append('circle')
           .attr('class','marker')
-          .attr('r',r)
+          .attr('r', minimalRadius )
           .attr('cx', function( d ) {
             d = projection.fromLatLngToDivPixel( d.value.latLong );
             d = ajustForBounds( d );
