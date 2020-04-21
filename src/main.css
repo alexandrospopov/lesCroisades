@@ -55,10 +55,6 @@ body {
   stroke-width: 5px;
 } 
 
-.link {
-  stroke: #ccc;
-  stroke-width: 5px;
-}
 
 .tooltip{
   position: absolute;			

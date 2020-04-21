@@ -59,6 +59,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .attr( "class", "link")
                .each( drawlink )
                .style('stroke', d =>  armyList[ d.army ].admin.color )
+               .style('stroke-width', d=>{
+                 console.log( d.nombre)
+                 return d.nombre/100} ) 
                .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
                .on("click", d => printTripInformations( d ) )
                .on("mouseout", d => hideToolTip( tooltip ));
