@@ -31,8 +31,8 @@ function setSlider( startYear, endYear ){
       var range = d3.brushSelection(this)
                     .map(x.invert);
 
-    updateLinks( range )
-    updateCities( range )
+    startPeriod = range[0]
+    endPeriod = range[1]
     }
 
   brush.move(brushg, [ startYear, endYear ].map(x));

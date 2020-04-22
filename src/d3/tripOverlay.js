@@ -9,7 +9,11 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
 minimalRadius = 10
 var sw = 0;
 var ne = 0;
+var startPeriod = 1000
+var endPeriod =  1200;
 
+function drawTripMap(  )
+{
 Promise.all([ d3.json( "src/json/trips.json" ),
               d3.json( "src/json/armees.json" ),
               d3.json( "src/json/villes.json" ), ]).then(function( files ) 
@@ -22,6 +26,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
     map.fitBounds( bounds );
 
     var overlay = new google.maps.OverlayView();
+    overlay.setMap(null);
     overlay.onAdd = function() {
       var tooltip = d3.select(this.getPanes().overlayMouseTarget )
           .append("div")
@@ -51,18 +56,32 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           .attr("class", "tooltip")
           .style("opacity", 0);
 
+
+        temporalizedTripList = tripList.filter( 
+          trip => ( trip.yearBegin < endPeriod && trip.yearEnd > startPeriod ) )
+        
         layer.selectAll( ".link" )
-               .data( tripList )
+          .data( temporalizedTripList ).exit().remove();
+
+        layer.selectAll( ".link" )
+               .data( temporalizedTripList )
                .each( drawlink )
-             .enter().append( "line" )
+               .style('stroke', d => { return d.color })
+               .style('stroke-width', d=>{ return d.nombre/100} ) 
+            .enter()
+               .append( "line" )
                .attr( "class", "link")
                .each( drawlink )
-               .style('stroke', d =>  armyList[ d.army ].admin.color )
-               .style('stroke-width', d=>{
-                 return d.nombre/100} ) 
+               .style('stroke', d => { return d.color })
+               .style('stroke-width', d=>{ return d.nombre/100} ) 
                .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
-               .on("click", d => printTripInformations( d ) )
+               .on("click", d => { console.log(d); printTripInformations( d ) } )
                .on("mouseout", d => hideToolTip( tooltip ));
+            
+
+        // layer.selectAll('.link')
+        //      .filter( d=> { return d.yearBegin < beginYear })
+        //      .style("opacity", 0)
 
         layer.selectAll( '.marker' )
                .data(d3.entries( cityList ))
@@ -75,7 +94,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .on("mouseout", d => hideToolTip( tooltip ));
 
           function drawlink( d ) {
-            console.log(d.source)
             let p1 = new google.maps.LatLng( d.source[0], 
                                          d.source[1] )
             let p2 = new google.maps.LatLng( d.target[0], 
@@ -106,7 +124,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
   overlay.setMap(map);
 
 })
-
+}
 
 function setBounds( nodes ){
   var bounds = new google.maps.LatLngBounds();
@@ -146,8 +164,8 @@ function visibleTripTooltip( d, tooltip, tripList ){
   tooltip.style("left", (d3.event.pageX + 5) + "px")
          .style("top", (d3.event.pageY - 28) + "px")
          .html( d.army + "<br>" 
-                + "De : " + tripList.nodes[ d.source ].cityName + "<br>"
-                + "Vers : " + tripList.nodes[ d.target ].cityName + "." )
+                + "De : " + d.sourceCity + "<br>"
+                + "Vers : " + d.targetCity + "." )
          .transition()
          .style("opacity", .9);
 }
@@ -167,14 +185,19 @@ function hideToolTip( tooltip ){
 }
 
 function updateLinks( range ){
+  console.log(range)
+  drawTripMap( range[0], range[1])
   
-  d3.selectAll( ".link" )
-       .filter( d => d.nombre < range[0] )
-       .style("opacity", 0)
-       .each( function(d,i) {console.log(d)})
+  // d3.selectAll( ".link" )
+  //      .filter( d => d.nombre < range[0] )
+  //      .style("opacity", 0)
+  //      .each( function(d,i) {console.log(d)})
 }
 
 
 function updateCities( range ){
-  console.log(range)
+  // console.log(range)
 }
+
+
+drawTripMap( 1000, 1200)

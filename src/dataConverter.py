@@ -58,7 +58,7 @@ def getLatLongForCity( cityData, cityName ):
 def addTrip( startCity, endCity, 
              startCityLatLong, endCityLatLong,
              tripYears,
-             army,
+             army, color,
              armyPopulation,
              tripDescription  ):
 
@@ -67,10 +67,11 @@ def addTrip( startCity, endCity,
         "target": endCityLatLong,
         "sourceCity" : startCity,
         "targetCity" : endCity,
-        "tripBegin" : tripYears[ 0 ],
-        "tripEnd" : tripYears[ 1 ],
+        "yearBegin" : tripYears[ 0 ],
+        "yearEnd" : tripYears[ 1 ],
         "tripDuration" : int( tripYears[ 1 ] ) - int( tripYears[ 0 ] ),
         "army" : army,
+        "color" : color,
         "nombre" : armyPopulation,
         "description" : tripDescription
     }
@@ -107,6 +108,7 @@ def writeTripJson( jsonDirectory ):
 
   for army in armyData:
 
+    color = armyData[ army ]["admin"]["color"]
     for tripNum in armyData[ army ][ "trajets" ][ "departArrivee" ]:
       
       startCity, endCity = armyData[ army ][ "trajets" ][ "departArrivee" ][ tripNum ].split( " - " )
@@ -121,6 +123,7 @@ def writeTripJson( jsonDirectory ):
                                startCityLatLong, endCityLatLong,
                                tripYears,
                                army,
+                               color,
                                armyPopulation,
                                tripDescription ) )
 
