@@ -51,18 +51,18 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           .attr("class", "tooltip")
           .style("opacity", 0);
 
-        // layer.selectAll( ".link" )
-        //        .data( tripList )
-        //        .each( drawlink )
-        //      .enter().append( "line" )
-        //        .attr( "class", "link")
-        //        .each( drawlink )
-        //        .style('stroke', d =>  armyList[ d.army ].admin.color )
-        //        .style('stroke-width', d=>{
-        //          return d.nombre/100} ) 
-        //        .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
-        //        .on("click", d => printTripInformations( d ) )
-        //        .on("mouseout", d => hideToolTip( tooltip ));
+        layer.selectAll( ".link" )
+               .data( tripList )
+               .each( drawlink )
+             .enter().append( "line" )
+               .attr( "class", "link")
+               .each( drawlink )
+               .style('stroke', d =>  armyList[ d.army ].admin.color )
+               .style('stroke-width', d=>{
+                 return d.nombre/100} ) 
+               .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
+               .on("click", d => printTripInformations( d ) )
+               .on("mouseout", d => hideToolTip( tooltip ));
 
         layer.selectAll( '.marker' )
                .data(d3.entries( cityList ))
@@ -74,17 +74,22 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .on("mouseover", d => visibleCityTooltip(d, tooltip, tripList))
                .on("mouseout", d => hideToolTip( tooltip ));
 
-          // function drawlink( d ) {
-          //   p1 = projection.fromLatLngToDivPixel( tripList.nodes[ d.source ].latLong );
-          //   p2 = projection.fromLatLngToDivPixel( tripList.nodes[ d.target ].latLong );
-          //   p1 = ajustForBounds( p1 )
-          //   p2 = ajustForBounds( p2 )
-          //   d3.select(this)
-          //     .attr('x1', p1.x + 'px')
-          //     .attr('y1', p1.y + 'px')
-          //     .attr('x2', p2.x + 'px') 
-          //     .attr('y2', p2.y + 'px');  
-          // }
+          function drawlink( d ) {
+            console.log(d.source)
+            let p1 = new google.maps.LatLng( d.source[0], 
+                                         d.source[1] )
+            let p2 = new google.maps.LatLng( d.target[0], 
+                                         d.target[1] )
+            p1 = projection.fromLatLngToDivPixel( p1 );
+            p2 = projection.fromLatLngToDivPixel( p2 );
+            p1 = ajustForBounds( p1 )
+            p2 = ajustForBounds( p2 )
+            d3.select(this)
+              .attr('x1', p1.x + 'px')
+              .attr('y1', p1.y + 'px')
+              .attr('x2', p2.x + 'px') 
+              .attr('y2', p2.y + 'px');  
+          }
 
         function drawMarker(d) {
           
