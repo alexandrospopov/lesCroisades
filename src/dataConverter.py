@@ -55,30 +55,39 @@ def getLatLongForCity( cityData, cityName ):
     cityData[ cityName ][ "Geographie" ][ "Longitude" ]
   ]
 
-def addCity( cityData, listAllCities, cityToAdd ):
+def addTrip( startCity, endCity, 
+             startCityLatLong, endCityLatLong,
+             tripDuration,
+             army,
+             armyPopulation,
+             tripDescription  ):
 
-  listAllCityNames = [ city[ "cityName" ] for city in listAllCities ]
+  trip = []
 
-  if cityToAdd not in listAllCityNames:
+  for year in range( tripDuration ) :
 
-    listAllCities.append(
+    barycenterSource = year /  tripDuration
+    barycenterTarget = ( year + 1 ) /  tripDuration
+
+    trip.append(
       {
-        "cityName" : cityToAdd,
-        "latLong" : getLatLongForCity( cityData, cityToAdd ) 
+        "source": [ barycenterSource * startCityLatLong[ 0 ] + 
+                              ( 1 - barycenterSource ) * endCityLatLong[ 0 ]  ,
+                    barycenterSource * startCityLatLong[ 1 ] + 
+                              ( 1 - barycenterSource ) * endCityLatLong[ 1 ] ],
+        "target": [ barycenterSource * startCityLatLong[ 0 ] + 
+                              ( 1 - barycenterTarget ) * endCityLatLong[ 0 ]  ,
+                    barycenterSource * startCityLatLong[ 1 ] + 
+                              ( 1 - barycenterTarget ) * endCityLatLong[ 1 ] ],
+        "sourceCity" : startCity,
+        "targetCity" : endCity,
+        "army" : army,
+        "nombre" : armyPopulation,
+        "description" : tripDescription
       }
     )
 
-def addTrip( listAllTrips, listAllCities, startCity, endCity, army, nombre, description ):
-
-  listAllTrips.append(
-    {
-      "source": getCityNum( listAllCities, startCity ),
-      "target" : getCityNum( listAllCities, endCity ),
-      "army" : army,
-      "nombre" : nombre,
-      "description" : description
-    }
-  )
+  return trip
 
 def getCityNum( listAllCities, cityToFind ):
 
@@ -107,34 +116,31 @@ def writeTripJson( jsonDirectory ):
 
 
   listAllTrips = []
-  listAllCities = []
 
   for army in armyData:
 
     for tripNum in armyData[ army ][ "trajets" ][ "departArrivee" ]:
       
       startCity, endCity = armyData[ army ][ "trajets" ][ "departArrivee" ][ tripNum ].split( " - " )
+      startCityLatLong = getLatLongForCity( cityData, startCity )
+      endCityLatLong = getLatLongForCity( cityData, endCity )
 
-      addCity( cityData,listAllCities, startCity )
-      addCity( cityData, listAllCities, endCity )
+      tripYears = armyData[ army ][ "trajets" ][ "annees" ][ tripNum ].split( " - " )
+      tripDuration = int( tripYears[ 1 ] ) - int( tripYears[ 0 ] )
 
-      print( listAllCities )
+      armyPopulation = armyData[ army ][ "trajets" ][ "nombre" ][ tripNum ]
+      tripDescription = armyData[ army ][ "trajets" ][ "description" ][ tripNum ]
+      listAllTrips += addTrip( startCity, endCity, 
+                               startCityLatLong, endCityLatLong,
+                               tripDuration,
+                               army,
+                               armyPopulation,
+                               tripDescription )
 
-      addTrip( listAllTrips, listAllCities, 
-               startCity, endCity, 
-               army,
-               armyData[ army ][ "trajets" ][ "nombre" ][ tripNum ],
-               armyData[ army ][ "trajets" ][ "description" ][ tripNum ] )
-
-  dictAllCitiesAndTrips = {
-    "nodes" : listAllCities,
-    "links" : listAllTrips
-  }
-
-  print( dictAllCitiesAndTrips )
+  print( listAllTrips )
 
   with open( pathToTripJson, "w") as j:
-    json.dump( dictAllCitiesAndTrips, j) 
+    json.dump( listAllTrips, j) 
 
   print( "Wrote json/trip.json")
 
