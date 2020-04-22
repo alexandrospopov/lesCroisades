@@ -57,35 +57,23 @@ def getLatLongForCity( cityData, cityName ):
 
 def addTrip( startCity, endCity, 
              startCityLatLong, endCityLatLong,
-             tripDuration,
+             tripYears,
              army,
              armyPopulation,
              tripDescription  ):
 
-  trip = []
-
-  for year in range( tripDuration ) :
-
-    barycenterSource = year /  tripDuration
-    barycenterTarget = ( year + 1 ) /  tripDuration
-
-    trip.append(
-      {
-        "source": [ barycenterSource * startCityLatLong[ 0 ] + 
-                              ( 1 - barycenterSource ) * endCityLatLong[ 0 ]  ,
-                    barycenterSource * startCityLatLong[ 1 ] + 
-                              ( 1 - barycenterSource ) * endCityLatLong[ 1 ] ],
-        "target": [ barycenterSource * startCityLatLong[ 0 ] + 
-                              ( 1 - barycenterTarget ) * endCityLatLong[ 0 ]  ,
-                    barycenterSource * startCityLatLong[ 1 ] + 
-                              ( 1 - barycenterTarget ) * endCityLatLong[ 1 ] ],
+  trip = {
+        "source": startCityLatLong,
+        "target": endCityLatLong,
         "sourceCity" : startCity,
         "targetCity" : endCity,
+        "tripBegin" : tripYears[ 0 ],
+        "tripEnd" : tripYears[ 1 ],
+        "tripDuration" : int( tripYears[ 1 ] ) - int( tripYears[ 0 ] ),
         "army" : army,
         "nombre" : armyPopulation,
         "description" : tripDescription
-      }
-    )
+    }
 
   return trip
 
@@ -126,16 +114,15 @@ def writeTripJson( jsonDirectory ):
       endCityLatLong = getLatLongForCity( cityData, endCity )
 
       tripYears = armyData[ army ][ "trajets" ][ "annees" ][ tripNum ].split( " - " )
-      tripDuration = int( tripYears[ 1 ] ) - int( tripYears[ 0 ] )
 
       armyPopulation = armyData[ army ][ "trajets" ][ "nombre" ][ tripNum ]
       tripDescription = armyData[ army ][ "trajets" ][ "description" ][ tripNum ]
-      listAllTrips += addTrip( startCity, endCity, 
+      listAllTrips.append( addTrip( startCity, endCity, 
                                startCityLatLong, endCityLatLong,
-                               tripDuration,
+                               tripYears,
                                army,
                                armyPopulation,
-                               tripDescription )
+                               tripDescription ) )
 
   print( listAllTrips )
 
