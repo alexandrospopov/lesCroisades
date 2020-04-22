@@ -33,6 +33,7 @@ function setSlider( startYear, endYear ){
 
     startPeriod = range[0]
     endPeriod = range[1]
+    overlay.draw()
     }
 
   brush.move(brushg, [ startYear, endYear ].map(x));

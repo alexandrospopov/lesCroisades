@@ -11,7 +11,7 @@ var sw = 0;
 var ne = 0;
 var startPeriod = 1000
 var endPeriod =  1200;
-
+var overlay = new google.maps.OverlayView();
 function drawTripMap(  )
 {
 Promise.all([ d3.json( "src/json/trips.json" ),
@@ -25,7 +25,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
     bounds = setBounds( cityList )
     map.fitBounds( bounds );
 
-    var overlay = new google.maps.OverlayView();
     overlay.setMap(null);
     overlay.onAdd = function() {
       var tooltip = d3.select(this.getPanes().overlayMouseTarget )
