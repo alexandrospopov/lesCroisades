@@ -60,7 +60,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .each( drawlink )
                .style('stroke', d =>  armyList[ d.army ].admin.color )
                .style('stroke-width', d=>{
-                 console.log( d.nombre)
                  return d.nombre/100} ) 
                .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
                .on("click", d => printTripInformations( d ) )
@@ -132,7 +131,6 @@ function setNorthEast( projection,  bounds, padding){
 }
 
 function printTripInformations( d ){
-  console.log(d)
    d3.select("#additionalInfo")
     .text( d.description );
 }
