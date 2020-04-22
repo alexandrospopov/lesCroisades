@@ -18,8 +18,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
     armyList = files[ 1 ]
     cityList = files[ 2 ]
 
-    console.log(cityList)
-
     bounds = setBounds( cityList )
     map.fitBounds( bounds );
 
@@ -66,15 +64,15 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         //        .on("click", d => printTripInformations( d ) )
         //        .on("mouseout", d => hideToolTip( tooltip ));
 
-        // layer.selectAll( '.marker' )
-        //        .data(d3.entries( cityList ))
-        //        .each( drawMarker )
-        //      .enter().append( 'circle' )
-        //        .attr( 'class', 'marker' )
-        //        .attr( 'r' , minimalRadius )
-        //        .each( drawMarker)
-              //  .on("mouseover", d => visibleCityTooltip(d, tooltip, tripList))
-              //  .on("mouseout", d => hideToolTip( tooltip ));
+        layer.selectAll( '.marker' )
+               .data(d3.entries( cityList ))
+               .each( drawMarker )
+             .enter().append( 'circle' )
+               .attr( 'class', 'marker' )
+               .attr( 'r' , minimalRadius )
+               .each( drawMarker)
+               .on("mouseover", d => visibleCityTooltip(d, tooltip, tripList))
+               .on("mouseout", d => hideToolTip( tooltip ));
 
           // function drawlink( d ) {
           //   p1 = projection.fromLatLngToDivPixel( tripList.nodes[ d.source ].latLong );
@@ -88,15 +86,15 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           //     .attr('y2', p2.y + 'px');  
           // }
 
-        // function drawMarker(d) {
+        function drawMarker(d) {
           
-        //   latLong =new google.maps.LatLng( d.value.Geographie.Latitude,
-        //                                    d.value.Geographie.Longitude )
-        //   d = projection.fromLatLngToDivPixel( latLong );
-        //   return d3.select(this)
-        //     .attr( 'cx' , d.x - sw.x )
-        //     .attr( 'cy' , d.y - ne.y );
-        // }
+          latLong =new google.maps.LatLng( d.value.Geographie.Latitude,
+                                           d.value.Geographie.Longitude )
+          d = projection.fromLatLngToDivPixel( latLong );
+          return d3.select(this)
+            .attr( 'cx' , d.x - sw.x )
+            .attr( 'cy' , d.y - ne.y );
+        }
       };
     };
 
