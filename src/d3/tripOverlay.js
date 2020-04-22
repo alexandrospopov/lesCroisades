@@ -1,4 +1,3 @@
-
 // Create the Google Map…
 var map = new google.maps.Map(d3.select("#googleMap").node(), {
   zoom: 4,
@@ -157,4 +156,13 @@ function hideToolTip( tooltip ){
   tooltip.transition()
          .style("opacity", 0) 
          
+}
+
+function updateLinks( range ){
+  console.log(range)
+}
+
+
+function updateCities( range ){
+  console.log(range)
 }

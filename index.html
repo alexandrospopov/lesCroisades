@@ -43,10 +43,18 @@
       <div class="row" id="mainRow" >
         <div class="col-lg-8" id="googleMap" > Google Map </div>
         <div class="col-lg-4" id="informationPanel" > 
-          <p> Informations Complémentaires</p>  
+          <p> Réglages</p>  
+          <div id="armyChoice">
+            <p> Choix des acteurs visibles </p>
+          </div>
+          <div id="timeSlider">
+            <p> Choix de la période temporelle </p>
+          </div>
+
           <p id="additionalInfo"></p>  
         </div>
       </div>
+    
     </div>
 
 
@@ -54,6 +62,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.25/gmaps.js"></script>
     <script src="src/map/map.js"></script>
     <script src="src/d3/tripOverlay.js"></script>
+    <script src="src/d3/slider.js"></script>
 
  </body>
 </html>
