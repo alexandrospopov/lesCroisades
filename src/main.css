@@ -5,6 +5,7 @@ body {
 
 #mainRow{
   height: 1200px;
+  padding :40px;
 }
 
 #googleMap{
