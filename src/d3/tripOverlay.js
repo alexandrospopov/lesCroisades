@@ -101,11 +101,34 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             p2 = projection.fromLatLngToDivPixel( p2 );
             p1 = ajustForBounds( p1 )
             p2 = ajustForBounds( p2 )
+
+            vectorDirect = [ p2.x - p1.x, 
+                             p2.y - p1.y] 
+            vectorIndirect = [ p1.x - p2.x,
+                               p1.y - p2.y ]
+
+            
+            let tripPeriodEnd = endPeriod;
+            let tripPeriodBegin = startPeriod;
+
+            if ( endPeriod > d.yearEnd ){ tripPeriodEnd = d.yearEnd }
+            if ( startPeriod < d.yearBegin ){ tripPeriodBegin = d.yearBegin }
+
+
+
+            q2 = [ p1.x + vectorDirect[0] * ( tripPeriodEnd - d.yearBegin ) / d.tripDuration,
+                   p1.y + vectorDirect[1] * ( tripPeriodEnd - d.yearBegin ) / d.tripDuration ]
+
+            q1 = [ p2.x + vectorIndirect[0] * ( d.yearEnd - tripPeriodBegin ) / d.tripDuration,
+                   p2.y + vectorIndirect[1] * ( d.yearEnd - tripPeriodBegin ) / d.tripDuration ]
+                                    
+
+
             d3.select(this)
-              .attr('x1', p1.x + 'px')
-              .attr('y1', p1.y + 'px')
-              .attr('x2', p2.x + 'px') 
-              .attr('y2', p2.y + 'px');  
+              .attr('x1', q1[0] + 'px')
+              .attr('y1', q1[1] + 'px')
+              .attr('x2', q2[0] + 'px') 
+              .attr('y2', q2[1] + 'px');  
           }
 
         function drawMarker(d) {
