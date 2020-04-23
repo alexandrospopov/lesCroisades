@@ -102,26 +102,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             p1 = ajustForBounds( p1 )
             p2 = ajustForBounds( p2 )
 
-            vectorDirect = [ p2.x - p1.x, 
-                             p2.y - p1.y] 
-            vectorIndirect = [ p1.x - p2.x,
-                               p1.y - p2.y ]
-
-            
-            let tripPeriodEnd = endPeriod;
-            let tripPeriodBegin = startPeriod;
-
-            if ( endPeriod > d.yearEnd ){ tripPeriodEnd = d.yearEnd }
-            if ( startPeriod < d.yearBegin ){ tripPeriodBegin = d.yearBegin }
-
-
-
-            q2 = [ p1.x + vectorDirect[0] * ( tripPeriodEnd - d.yearBegin ) / d.tripDuration,
-                   p1.y + vectorDirect[1] * ( tripPeriodEnd - d.yearBegin ) / d.tripDuration ]
-
-            q1 = [ p2.x + vectorIndirect[0] * ( d.yearEnd - tripPeriodBegin ) / d.tripDuration,
-                   p2.y + vectorIndirect[1] * ( d.yearEnd - tripPeriodBegin ) / d.tripDuration ]
-                                    
+            var coordinates  = ajustForTime( d, p1, p2 )
+            q1 = coordinates[ 0 ]
+            q2 = coordinates[ 1 ]
 
 
             d3.select(this)
@@ -133,7 +116,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         function drawMarker(d) {
           
-          latLong =new google.maps.LatLng( d.value.Geographie.Latitude,
+          latLong = new google.maps.LatLng( d.value.Geographie.Latitude,
                                            d.value.Geographie.Longitude )
           d = projection.fromLatLngToDivPixel( latLong );
           return d3.select(this)
@@ -161,6 +144,29 @@ function ajustForBounds( d ){
   d.x -= sw.x
   d.y -= ne.y
   return d 
+}
+
+function ajustForTime( d, p1, p2 ){
+
+  let vectorDirect = [ p2.x - p1.x, 
+                       p2.y - p1.y] 
+  let vectorIndirect = [ p1.x - p2.x,
+                         p1.y - p2.y ]
+
+
+  let tripPeriodEnd = endPeriod;
+  let tripPeriodBegin = startPeriod;
+
+  if ( endPeriod > d.yearEnd ){ tripPeriodEnd = d.yearEnd }
+  if ( startPeriod < d.yearBegin ){ tripPeriodBegin = d.yearBegin }
+
+  const q2 = [ p1.x + vectorDirect[0] * ( tripPeriodEnd - d.yearBegin ) / d.tripDuration,
+  p1.y + vectorDirect[1] * ( tripPeriodEnd - d.yearBegin ) / d.tripDuration ]
+
+  const q1 = [ p2.x + vectorIndirect[0] * ( d.yearEnd - tripPeriodBegin ) / d.tripDuration,
+  p2.y + vectorIndirect[1] * ( d.yearEnd - tripPeriodBegin ) / d.tripDuration ]
+
+  return [ q1, q2 ]
 }
 
 function setSouthWest( projection, bounds, padding){
