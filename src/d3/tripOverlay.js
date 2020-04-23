@@ -59,23 +59,67 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         temporalizedTripList = tripList.filter( 
           trip => ( trip.yearBegin < endPeriod && trip.yearEnd > startPeriod ) )
         
-        layer.selectAll( ".link" )
-          .data( temporalizedTripList ).exit().remove();
+        // layer.selectAll( ".link" )
+        //      .data( temporalizedTripList ).exit().remove();
 
-        layer.selectAll( ".link" )
-               .data( temporalizedTripList )
-               .each( drawlink )
-               .style('stroke', d => { return d.color })
-               .style('stroke-width', d=>{ return d.nombre/100} ) 
-            .enter()
-               .append( "line" )
-               .attr( "class", "link")
-               .each( drawlink )
-               .style('stroke', d => { return d.color })
-               .style('stroke-width', d=>{ return d.nombre/100} ) 
-               .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
-               .on("click", d => { console.log(d); printTripInformations( d ) } )
-               .on("mouseout", d => hideToolTip( tooltip ));
+        
+        var linkGroup = layer.selectAll("g")
+                             .data( temporalizedTripList )  
+                             .attr('class','link')
+
+
+        var linkGroupEnter = linkGroup.enter()
+                                      .append('g')
+        
+        linkGroupEnter.append("line")
+                      .attr('class','link-line')
+                      .each(drawlink)
+
+        linkGroup.select('.link-line')
+                 .each( drawlink )
+                 .style('stroke', d => { return d.color })
+                 .style('stroke-width', d=>{ return d.nombre/100} ) 
+                 
+        linkGroup.exit().remove()
+
+        // linkGroup.append("circle")
+        //          .attr( "class", "link-circle-start")
+        //          .each( drawlinkCircleStart )
+        //          .style('fill', d => { return d.color })
+        //          .style('r', d=>{ return d.nombre/100} ) 
+
+        // linkGroup.append("circle")                
+        //          .attr( "class", "link-circle-end")
+        //          .each( drawlinkCircleEnd )
+        //          .style('fill', d => { return d.color })
+        //          .style('stroke-width', d=>{ return d.nombre/100} ) 
+
+        // linkGroup.selectAll( ".link-line" )
+        //       .data( temporalizedTripList )
+        //         .each( updateLinks )
+        //         .style('stroke', d => { return d.color })
+        //         .style('stroke-width', d=>{ return d.nombre/100} ) 
+        //     .enter()
+        //       .append( "line" )
+        //       .attr( "class", "link-line")
+        //       .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
+        //       .on("click", d => { console.log(d); printTripInformations( d ) } )
+        //       .on("mouseout", d => hideToolTip( tooltip ))
+        //       .append("line")
+        //         .attr( "class", "link-line")
+        //         .each( drawlink )
+        //         .style('stroke', d => { return d.color })
+        //         .style('stroke-width', d=>{ return d.nombre/100} ) 
+              //  .append("circle")
+              //   .attr( "class", "link-circle-start")
+              //   .each( drawlinkCircleStart )
+              //   .style('fill', d => { return d.color })
+              //   .style('r', d=>{ return d.nombre/100} ) 
+              // .append("circle")                
+              //   .attr( "class", "link-circle-end")
+              //   .each( drawlinkCircleEnd )
+              //   .style('fill', d => { return d.color })
+              //   .style('stroke-width', d=>{ return d.nombre/100} ) 
             
 
         // layer.selectAll('.link')
@@ -92,6 +136,47 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .on("mouseover", d => visibleCityTooltip(d, tooltip, tripList))
                .on("mouseout", d => hideToolTip( tooltip ));
 
+          function drawlinkCircleStart( d ){
+            let p1 = new google.maps.LatLng( d.source[0], 
+                                             d.source[1] )
+            let p2 = new google.maps.LatLng( d.target[0], 
+                                             d.target[1] )
+            p1 = projection.fromLatLngToDivPixel( p1 );
+            p2 = projection.fromLatLngToDivPixel( p2 );
+            p1 = ajustForBounds( p1 )
+            p2 = ajustForBounds( p2 )
+
+            var coordinates  = ajustForTime( d, p1, p2 )
+            q1 = coordinates[ 0 ]
+            q2 = coordinates[ 1 ]
+
+
+            return d3.select(this)
+              .attr('cx', q1[0] + 'px')
+              .attr('cy', q1[1] + 'px');  
+          }
+
+          function drawlinkCircleEnd( d ){
+            let p1 = new google.maps.LatLng( d.source[0], 
+                                             d.source[1] )
+            let p2 = new google.maps.LatLng( d.target[0], 
+                                             d.target[1] )
+            p1 = projection.fromLatLngToDivPixel( p1 );
+            p2 = projection.fromLatLngToDivPixel( p2 );
+            p1 = ajustForBounds( p1 )
+            p2 = ajustForBounds( p2 )
+
+            var coordinates  = ajustForTime( d, p1, p2 )
+            q1 = coordinates[ 0 ]
+            q2 = coordinates[ 1 ]
+
+
+            return d3.select(this)
+              .attr('cx', q2[0] + 'px')
+              .attr('cy', q2[1] + 'px');  
+          }
+
+
           function drawlink( d ) {
             let p1 = new google.maps.LatLng( d.source[0], 
                                          d.source[1] )
@@ -105,7 +190,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             var coordinates  = ajustForTime( d, p1, p2 )
             q1 = coordinates[ 0 ]
             q2 = coordinates[ 1 ]
-
 
             d3.select(this)
               .attr('x1', q1[0] + 'px')
