@@ -63,68 +63,38 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         //      .data( temporalizedTripList ).exit().remove();
 
         
-        var linkGroup = layer.selectAll("g")
+        var linkGroup = layer.selectAll(".link")
                              .data( temporalizedTripList )  
-                             .attr('class','link')
-
 
         var linkGroupEnter = linkGroup.enter()
                                       .append('g')
+                                      .attr('class','link')
         
         linkGroupEnter.append("line")
                       .attr('class','link-line')
-                      .each(drawlink)
+
+        linkGroupEnter.append("circle")
+                      .attr('class','link-circle-start')
+
+        linkGroupEnter.append("circle")
+                      .attr('class','link-circle-end')
 
         linkGroup.select('.link-line')
                  .each( drawlink )
                  .style('stroke', d => { return d.color })
                  .style('stroke-width', d=>{ return d.nombre/100} ) 
-                 
+
+        linkGroup.select('.link-circle-start')
+                 .each( drawlinkCircleStart )
+                 .attr( 'r', d=> { return d.nombre/(2* 100) } )
+                 .style('fill', d=> {return d.color})
+
+        linkGroup.select('.link-circle-end')
+                 .each( drawlinkCircleEnd )
+                 .attr( 'r', d=> { return d.nombre/(2* 100) } )
+                 .style('fill', d=> {return d.color})
+
         linkGroup.exit().remove()
-
-        // linkGroup.append("circle")
-        //          .attr( "class", "link-circle-start")
-        //          .each( drawlinkCircleStart )
-        //          .style('fill', d => { return d.color })
-        //          .style('r', d=>{ return d.nombre/100} ) 
-
-        // linkGroup.append("circle")                
-        //          .attr( "class", "link-circle-end")
-        //          .each( drawlinkCircleEnd )
-        //          .style('fill', d => { return d.color })
-        //          .style('stroke-width', d=>{ return d.nombre/100} ) 
-
-        // linkGroup.selectAll( ".link-line" )
-        //       .data( temporalizedTripList )
-        //         .each( updateLinks )
-        //         .style('stroke', d => { return d.color })
-        //         .style('stroke-width', d=>{ return d.nombre/100} ) 
-        //     .enter()
-        //       .append( "line" )
-        //       .attr( "class", "link-line")
-        //       .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
-        //       .on("click", d => { console.log(d); printTripInformations( d ) } )
-        //       .on("mouseout", d => hideToolTip( tooltip ))
-        //       .append("line")
-        //         .attr( "class", "link-line")
-        //         .each( drawlink )
-        //         .style('stroke', d => { return d.color })
-        //         .style('stroke-width', d=>{ return d.nombre/100} ) 
-              //  .append("circle")
-              //   .attr( "class", "link-circle-start")
-              //   .each( drawlinkCircleStart )
-              //   .style('fill', d => { return d.color })
-              //   .style('r', d=>{ return d.nombre/100} ) 
-              // .append("circle")                
-              //   .attr( "class", "link-circle-end")
-              //   .each( drawlinkCircleEnd )
-              //   .style('fill', d => { return d.color })
-              //   .style('stroke-width', d=>{ return d.nombre/100} ) 
-            
-
-        // layer.selectAll('.link')
-        //      .filter( d=> { return d.yearBegin < beginYear })
-        //      .style("opacity", 0)
 
         layer.selectAll( '.marker' )
                .data(d3.entries( cityList ))
@@ -152,8 +122,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
 
             return d3.select(this)
-              .attr('cx', q1[0] + 'px')
-              .attr('cy', q1[1] + 'px');  
+              .attr('cx', q1[0] )
+              .attr('cy', q1[1] );  
           }
 
           function drawlinkCircleEnd( d ){
@@ -171,9 +141,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             q2 = coordinates[ 1 ]
 
 
-            return d3.select(this)
-              .attr('cx', q2[0] + 'px')
-              .attr('cy', q2[1] + 'px');  
+            d3.select(this)
+              .attr('cx', q2[0] )
+              .attr('cy', q2[1] );  
           }
 
 
