@@ -69,6 +69,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         var linkGroupEnter = linkGroup.enter()
                                       .append('g')
                                       .attr('class','link')
+                                      .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
+                                      .on("click", d => { console.log(d); printTripInformations( d ) } )
+                                      .on("mouseout", d => hideToolTip( tooltip ));
         
         linkGroupEnter.append("line")
                       .attr('class','link-line')
