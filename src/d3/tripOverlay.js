@@ -59,10 +59,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         temporalizedTripList = tripList.filter( 
           trip => ( trip.yearBegin < endPeriod && trip.yearEnd > startPeriod ) )
         
-        // layer.selectAll( ".link" )
-        //      .data( temporalizedTripList ).exit().remove();
-
-        
         var linkGroup = layer.selectAll(".link")
                              .data( temporalizedTripList )  
 
