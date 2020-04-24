@@ -237,7 +237,25 @@ function setNorthEast( projection,  bounds, padding){
 }
 
 function printTripInformations( d ){
-  alert( d.description );
+
+  var modal = document.getElementById("myModal");
+  var span = document.getElementsByClassName("close")[0];
+  var modalParagraph = document.getElementById("modalParagraph")
+
+  modalParagraph.textContent = d.description ;
+  modal.style.display = "block";
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
 }
 
 function visibleTripTooltip( d, tooltip, tripList ){
