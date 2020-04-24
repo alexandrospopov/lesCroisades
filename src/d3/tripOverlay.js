@@ -242,6 +242,8 @@ function printTripInformations( d ){
   var span = document.getElementsByClassName("close")[0];
   var modalParagraph = document.getElementById("modalParagraph")
 
+  modalTitle.textContent = d.army + " : De " + d.sourceCity + " vers " + d.targetCity; 
+  modalDates.textContent = d.yearBegin + ' - ' + d.yearEnd;
   modalParagraph.textContent = d.description ;
   modal.style.display = "block";
 
