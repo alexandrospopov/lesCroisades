@@ -2,6 +2,13 @@ import os
 import pandas as pd
 import json
 
+"""
+Naming convention 
+
+nature + start / end 
+
+"""
+
 def simplifyDictionary( d ):
 
   for key in d:
@@ -91,6 +98,17 @@ def getCityNum( listAllCities, cityToFind ):
     raise ValueError("%s not part of listAllCities." % cityToFind )
 
 
+def analyseTimeData( timeTrip ):
+
+  timeTripMoment = timeTrip.split( ' - ' )
+
+  for index, moment in enumerate( timeTripMoment ) :
+    [ month, year ] = moment.split('/')
+    timeTripMoment[ index ] = int( year ) * 12 + int( month )
+
+  return timeTripMoment 
+
+
 def writeTripJson( jsonDirectory ):
   
   pathToArmyJson = os.path.join( jsonDirectory, "armees.json")
@@ -115,7 +133,8 @@ def writeTripJson( jsonDirectory ):
       startCityLatLong = getLatLongForCity( cityData, startCity )
       endCityLatLong = getLatLongForCity( cityData, endCity )
 
-      tripYears = armyData[ army ][ "trajets" ][ "annees" ][ tripNum ].split( " - " )
+      [ timemTripStart, timeTripEnd ]  = analyseTimeData(
+                          armyData[ army ][ "trajets" ][ "annees" ][ tripNum ] )
 
       armyPopulation = armyData[ army ][ "trajets" ][ "nombre" ][ tripNum ]
       tripDescription = armyData[ army ][ "trajets" ][ "description" ][ tripNum ]
