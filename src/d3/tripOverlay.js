@@ -41,8 +41,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
       overlay.draw = function(){
         var projection = this.getProjection();
 
-        sw = setSouthWest( projection, bounds, minimalRadius * 2  )
-        ne = setNorthEast( projection, bounds, minimalRadius * 2  )
+        sw = setSouthWest( projection, bounds, 60 * 2  )
+        ne = setNorthEast( projection, bounds, 60 * 2  )
 
         d3.select('#canvas')
           .attr( 'width' , ( ne.x - sw.x ) + 'px')
@@ -109,15 +109,18 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         var tripStops = layer.selectAll( ".tripStop" )
                              .data( selectedTripStopList )
 
-        var tripStopsEnter = tripStops.enter().append( 'circle' )
+        var tripStopsEnter = tripStops.enter().append('image')
+                                              .attr('xlink:href', '../../img/trips/tent.svg')
+                                              .attr('width', 40)
+                                              .attr('height', 40)
                                               .attr( 'class', 'tripStop' )
                                               .attr( 'r' , 2 * minimalRadius )
                                               .each( drawTripStopMarker )
-                                              .style("fill" , trip => { return trip.armyColor })
                                               .on("mouseover", trip => visibleTripTooltip(trip ))
                                               .on("click", trip => { printTripInformations( trip ) } )
                                               .on("mouseout", () => hideToolTip( tooltip ));     
-                                              
+
+
         tripStops.each( drawTripStopMarker )
         tripStops.exit().remove()
 
@@ -201,8 +204,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                               trip.latLongTripStart[1])
             d = projection.fromLatLngToDivPixel( latLong );
             return d3.select(this)
-              .attr( 'cx' , d.x - sw.x )
-              .attr( 'cy' , d.y - ne.y );
+                     .attr("transform", "translate(" + (d.x - sw.x) + "," + ( d.y - ne.y) + ")")
           }
 
 
