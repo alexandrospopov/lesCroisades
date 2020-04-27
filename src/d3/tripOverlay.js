@@ -110,7 +110,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                              .data( selectedTripStopList )
 
         var tripStopsEnter = tripStops.enter().append('image')
-                                              .attr('xlink:href', '../../img/trips/tent.svg')
+                                              .attr( 'xlink:href', d => '../../img/trips/' + d.armyName + '-tent.svg')
                                               .attr('width', 40)
                                               .attr('height', 40)
                                               .attr( 'class', 'tripStop' )
