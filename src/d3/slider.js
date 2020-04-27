@@ -6,10 +6,10 @@ var marginRight = 80
 var width = 700 - marginSides * 2;
 var height = 340 - marginTop;
 
-function setSlider( startYear, endYear ){
+function setSlider( timeStampStart, timeStampEnd ){
 
   var x = d3.scaleLinear()
-    .domain([ startYear, endYear ])
+    .domain([ timeStampStart, timeStampEnd ])
     .range([0, width]);
 
   var brush = d3.brushX()
@@ -46,11 +46,13 @@ function setSlider( startYear, endYear ){
     selectedTimePeriodStart = range[0]
     selectedTimePeriodEnd = range[1]
     overlay.draw()
+    updateTimePrint( range )
     }
 
-  brush.move(brushg, [ startYear, endYear ].map(x));
-
+  brush.move(brushg, [ timeStampStart, timeStampEnd ].map(x));
 }
+
+updateTimePrint( [ 12000, 12015 ] )
 setSlider( 12000, 12015 )
 
 function deduceMonthAndYear( timeStamp ){
@@ -69,6 +71,13 @@ function deduceMonthAndYear( timeStamp ){
     "Décembre"
   ]
   let year = Math.floor( timeStamp / 12 )
-  let month = monthNames[ timeStamp % 12  ]
+  let month = monthNames[ Math.floor(timeStamp % 12)  ]
   return month + " " + year
+}
+
+function updateTimePrint( range ){
+
+  let p = document.getElementById("timePrint");
+  p.textContent =   deduceMonthAndYear( range[0] ) + ' - ' + deduceMonthAndYear( range[ 1 ] )
+
 }

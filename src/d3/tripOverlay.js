@@ -27,10 +27,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
     overlay.setMap(null);
     overlay.onAdd = function() {
-      var tooltip = d3.select(this.getPanes().overlayMouseTarget )
-          .append("div")
-          .attr("class", "tooltip")
-          .style("opacity", 0);
       var layer = d3.select(this.getPanes().overlayMouseTarget )
           .append("svg")
           .attr('id','canvas');
@@ -50,10 +46,10 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           .style( 'top', ne.y +'px' );
 
 
-        var tooltip = d3.select("body")
-          .append("div")
-          .attr("class", "tooltip")
-          .style("opacity", 0);
+        var tooltip = d3.select( "body" )
+                        .append( "div" )
+                        .attr( "d", "tooltip" )
+                        .style( "opacity", 0);
 
 
         selectedTripList = tripList.filter( 
