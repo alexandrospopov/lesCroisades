@@ -61,6 +61,14 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         selectedTripList = tripList.filter( 
           trip => ( trip.timeTripStart < selectedTimePeriodEnd && 
                     trip.timeTripEnd > selectedTimePeriodStart ) )
+
+        selectedTripStopList = selectedTripList.filter(
+          trip => ( trip.cityNameTripStart == trip.cityNameTripEnd ) )
+
+        selectedTripList = selectedTripList.filter(
+          trip => ( trip.cityNameTripStart != trip.cityNameTripEnd ) )
+
+
         var linkGroup = layer.selectAll(".link")
                              .data( selectedTripList )  
 
@@ -93,10 +101,27 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         linkGroup.select('.link-circle-end')
                  .each( drawlinkCircleEnd )
-                 .attr( 'r', trip => { return trip.armyPopulation / ( 2* 100 ) } )
+                 .attr( 'r', trip => { return trip.armyPopulation / ( 2 * 100 ) } )
                  .style('fill', trip => {return trip.armyColor } )
 
         linkGroup.exit().remove()
+
+        var tripStops = layer.selectAll( ".tripStop" )
+                             .data( selectedTripStopList )
+
+        var tripStopsEnter = tripStops.enter().append( 'circle' )
+                                              .attr( 'class', 'tripStop' )
+                                              .attr( 'r' , 2 * minimalRadius )
+                                              .each( drawTripStopMarker )
+                                              .style("fill" , trip => { return trip.armyColor })
+                                              .on("mouseover", trip => visibleTripTooltip(trip ))
+                                              .on("click", trip => { printTripInformations( trip ) } )
+                                              .on("mouseout", () => hideToolTip( tooltip ));     
+                                              
+        tripStops.each( drawTripStopMarker )
+        tripStops.exit().remove()
+
+                  
 
         layer.selectAll( '.marker' )
                .data(d3.entries( cityList ))
@@ -169,6 +194,18 @@ Promise.all([ d3.json( "src/json/trips.json" ),
               .attr('x2', q2[0] + 'px') 
               .attr('y2', q2[1] + 'px');  
           }
+
+
+          function drawTripStopMarker( trip ) {
+            latLong = new google.maps.LatLng( trip.latLongTripStart[0],
+                                              trip.latLongTripStart[1])
+            d = projection.fromLatLngToDivPixel( latLong );
+            return d3.select(this)
+              .attr( 'cx' , d.x - sw.x )
+              .attr( 'cy' , d.y - ne.y );
+          }
+
+
 
         function drawMarker(d) {
           
