@@ -331,7 +331,7 @@ function printTripInformations( trip ){
 function visibleTripTooltip( trip ){
   d3.select('.tooltip').style("left", (d3.event.pageX + 5) + "px")
                        .style("top", (d3.event.pageY - 28) + "px")
-                       .html( trip.army + "<br>" 
+                       .html( trip.armyName + "<br>" 
                               + "De : " + trip.cityNameTripStart + "<br>"
                               + "Vers : " + trip.cityNameTripEnd + "." )
                        .transition()
