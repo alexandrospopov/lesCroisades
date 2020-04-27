@@ -59,7 +59,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         selectedTripList = tripList.filter( 
           trip => ( trip.timeTripStart < selectedTimePeriodEnd && 
                     trip.timeTripEnd > selectedTimePeriodStart ) )
-        console.log(selectedTripList)
         var linkGroup = layer.selectAll(".link")
                              .data( selectedTripList )  
 

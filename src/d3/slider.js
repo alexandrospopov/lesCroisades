@@ -31,8 +31,8 @@ function setSlider( startYear, endYear ){
       var range = d3.brushSelection(this)
                     .map(x.invert);
 
-    startPeriod = range[0]
-    endPeriod = range[1]
+    selectedTimePeriodStart = range[0]
+    selectedTimePeriodEnd = range[1]
     overlay.draw()
     }
 
