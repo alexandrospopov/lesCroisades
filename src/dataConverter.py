@@ -10,6 +10,15 @@ nature + start / end
 """
 
 def simplifyDictionary( d ):
+  """
+  {
+    key0 : { key1 : 0, value : ...}
+  }
+  =>1
+  {
+    key1 : ...
+  }
+  """
 
   for key in d:
   
@@ -19,38 +28,37 @@ def simplifyDictionary( d ):
 
 
 
-def translateExcel( dataDirectory, jsonDirectory, dataName ):
+def translateExcel( rootDataDirectory, jsonDirectory, dataName ):
 
   print( "Converting %s exceles : " % dataName)
 
-  dataPreciseDirectory = os.path.join( dataDirectory, dataName )
+  dataDirectory = os.path.join( rootDataDirectory, dataName )
 
   listDataFiles = os.listdir( dataPreciseDirectory )
   listDataFiles = [ f for f in listDataFiles if f.endswith( ".xlsx" ) ]
 
-  fullDataJson = {}
-  pathToFullDataJson = os.path.join( jsonDirectory, "%s.json" % dataName )
+  dataJson = {}
+  pathToJson = os.path.join( jsonDirectory, "%s.json" % dataName )
 
   for dataFile in listDataFiles :
 
     pathToDataFile = os.path.join( dataPreciseDirectory, dataFile)
-    data = pd.read_excel( pathToDataFile, 
-                          sheet_name = None )
+    excel = pd.read_excel( pathToDataFile, sheet_name = None )
 
-    for spreadsheet in data:
+    for spreadsheet in excel:
 
-      data[ spreadsheet ] = data[ spreadsheet ].to_dict()
-      simplifyDictionary( data[ spreadsheet ] )
+      excel[ spreadsheet ] = excel[ spreadsheet ].to_dict()
+      simplifyDictionary( excel[ spreadsheet ] )
 
-    fullDataJson[ dataFile.split( '.' )[ 0 ] ] = data
+    dataJson[ dataFile.split( '.' )[ 0 ] ] = excel
 
     print( "  Read %s excel." % dataFile )
 
 
-  with open( pathToFullDataJson, 'w') as fp:
-    json.dump( fullDataJson, fp)
+  with open( pathToJson, 'w') as fp:
+    json.dump( dataJson, fp)
 
-  print( "Wrote %s ." % pathToFullDataJson )
+  print( "Wrote %s ." % pathToJson )
 
 
 def getLatLongForCity( cityData, cityName ):
@@ -156,13 +164,13 @@ def writeTripJson( jsonDirectory ):
 
 if __name__ == "__main__" : 
   
-  dataDirectory = os.path.join( "..", "data" ) 
+  rootDataDirectory = os.path.join( "..", "data" ) 
   jsonDirectory = os.path.join( "json" )
 
   if not os.path.isdir( jsonDirectory ):
     os.mkdir( jsonDirectory )
 
-  translateExcel( dataDirectory, jsonDirectory, "armees" )
-  translateExcel( dataDirectory, jsonDirectory, "villes" )
+  translateExcel( rootDataDirectory, jsonDirectory, "armees" )
+  translateExcel( rootDataDirectory, jsonDirectory, "villes" )
 
   writeTripJson( jsonDirectory )
