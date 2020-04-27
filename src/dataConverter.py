@@ -34,7 +34,7 @@ def translateExcel( rootDataDirectory, jsonDirectory, dataName ):
 
   dataDirectory = os.path.join( rootDataDirectory, dataName )
 
-  listDataFiles = os.listdir( dataPreciseDirectory )
+  listDataFiles = os.listdir( dataDirectory )
   listDataFiles = [ f for f in listDataFiles if f.endswith( ".xlsx" ) ]
 
   dataJson = {}
@@ -42,7 +42,7 @@ def translateExcel( rootDataDirectory, jsonDirectory, dataName ):
 
   for dataFile in listDataFiles :
 
-    pathToDataFile = os.path.join( dataPreciseDirectory, dataFile)
+    pathToDataFile = os.path.join( dataDirectory, dataFile)
     excel = pd.read_excel( pathToDataFile, sheet_name = None )
 
     for spreadsheet in excel:
