@@ -27,6 +27,12 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
     overlay.setMap(null);
     overlay.onAdd = function() {
+      var tooltip = d3.select(this.getPanes().overlayMouseTarget )
+      // .append("div")
+      // .attr("class", "tooltip")
+      // .style("opacity", 0);
+
+
       var layer = d3.select(this.getPanes().overlayMouseTarget )
           .append("svg")
           .attr('id','canvas');
@@ -48,7 +54,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         var tooltip = d3.select( "body" )
                         .append( "div" )
-                        .attr( "d", "tooltip" )
+                        .attr( "class", "tooltip" )
                         .style( "opacity", 0);
 
 
@@ -61,7 +67,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         var linkGroupEnter = linkGroup.enter()
                                       .append('g')
                                       .attr('class','link')
-                                      .on("mouseover", trip => visibleTripTooltip(trip, tooltip, tripList))
+                                      .on("mouseover", trip => visibleTripTooltip(trip ))
                                       .on("click", trip => { printTripInformations( trip ) } )
                                       .on("mouseout", () => hideToolTip( tooltip ));
         
@@ -283,20 +289,21 @@ function printTripInformations( trip ){
   }
 }
 
-function visibleTripTooltip( trip, tooltip, tripList ){
-  tooltip.style("left", (d3.event.pageX + 5) + "px")
-         .style("top", (d3.event.pageY - 28) + "px")
-         .html( trip.army + "<br>" 
-                + "De : " + trip.cityNameTripStart + "<br>"
-                + "Vers : " + trip.cityNameTripEnd + "." )
-         .transition()
-         .style("opacity", .9);
+function visibleTripTooltip( trip ){
+  d3.select('.tooltip').style("left", (d3.event.pageX + 5) + "px")
+                       .style("top", (d3.event.pageY - 28) + "px")
+                       .html( trip.army + "<br>" 
+                              + "De : " + trip.cityNameTripStart + "<br>"
+                              + "Vers : " + trip.cityNameTripEnd + "." )
+                       .transition()
+                       .style("opacity", .9);
 }
 
 function visibleCityTooltip( d, tooltip, tripList ){
+  console.log(d)
   tooltip.style("left", (d3.event.pageX + 5) + "px")
          .style("top", (d3.event.pageY - 28) + "px")
-         .html( d.value.cityName)
+         .html( d.key)
          .transition()
          .style("opacity", .9);
 }
