@@ -70,25 +70,26 @@ def getLatLongForCity( cityData, cityName ):
     cityData[ cityName ][ "Geographie" ][ "Longitude" ]
   ]
 
-def addTrip( startCity, endCity, 
-             startCityLatLong, endCityLatLong,
-             tripYears,
-             army, color,
+def addTrip( cityNameTripStart, cityNameTripEnd, 
+             latLongTripStart, latLongTripEnd,
+             timeTrip,
+             armyName,
+             color,
              armyPopulation,
              tripDescription  ):
 
   trip = {
-        "source": startCityLatLong,
-        "target": endCityLatLong,
-        "sourceCity" : startCity,
-        "targetCity" : endCity,
-        "yearBegin" : tripYears[ 0 ],
-        "yearEnd" : tripYears[ 1 ],
-        "tripDuration" : int( tripYears[ 1 ] ) - int( tripYears[ 0 ] ),
-        "army" : army,
+        "latLongTripStart": latLongTripStart,
+        "latLongTripEnd": latLongTripEnd,
+        "cityNameTripStart" : cityNameTripStart,
+        "cityNameTripEnd" : cityNameTripEnd,
+        "timeTripStart" : timeTrip[ 0 ],
+        "timeTripEnd" : timeTrip[ 1 ],
+        "tripDuration" : timeTrip[ 1 ] - timeTrip[ 0 ],
+        "armyName" : armyName,
         "color" : color,
-        "nombre" : armyPopulation,
-        "description" : tripDescription
+        "armyPopulation" : armyPopulation,
+        "tripDescription" : tripDescription
     }
 
   return trip
@@ -132,24 +133,26 @@ def writeTripJson( jsonDirectory ):
 
   listAllTrips = []
 
-  for army in armyData:
+  for armyName in armyData:
 
-    color = armyData[ army ]["admin"]["color"]
-    for tripNum in armyData[ army ][ "trajets" ][ "departArrivee" ]:
+    color = armyData[ armyName ][ "admin" ][ "color" ]
+    for tripNum in armyData[ armyName ][ "trajets" ][ "departArrivee" ]:
       
-      startCity, endCity = armyData[ army ][ "trajets" ][ "departArrivee" ][ tripNum ].split( " - " )
-      startCityLatLong = getLatLongForCity( cityData, startCity )
-      endCityLatLong = getLatLongForCity( cityData, endCity )
+      cityNameTripStart, cityNameTripEnd = \
+        armyData[ armyName ][ "trajets" ][ "departArrivee" ][ tripNum ].split( " - " )
 
-      [ timemTripStart, timeTripEnd ]  = analyseTimeData(
-                          armyData[ army ][ "trajets" ][ "annees" ][ tripNum ] )
+      latLongTripStart = getLatLongForCity( cityData, cityNameTripStart )
+      latLongTripEnd = getLatLongForCity( cityData, cityNameTripEnd )
 
-      armyPopulation = armyData[ army ][ "trajets" ][ "nombre" ][ tripNum ]
-      tripDescription = armyData[ army ][ "trajets" ][ "description" ][ tripNum ]
-      listAllTrips.append( addTrip( startCity, endCity, 
-                               startCityLatLong, endCityLatLong,
-                               tripYears,
-                               army,
+      timeTrip  = analyseTimeData(
+                      armyData[ armyName ][ "trajets" ][ "annees" ][ tripNum ] )
+
+      armyPopulation = armyData[ armyName ][ "trajets" ][ "nombre" ][ tripNum ]
+      tripDescription = armyData[ armyName ][ "trajets" ][ "description" ][ tripNum ]
+      listAllTrips.append( addTrip( cityNameTripStart, cityNameTripEnd, 
+                               latLongTripStart, latLongTripEnd,
+                               timeTrip,
+                               armyName,
                                color,
                                armyPopulation,
                                tripDescription ) )
