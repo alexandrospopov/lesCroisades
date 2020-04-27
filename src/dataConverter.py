@@ -165,6 +165,35 @@ def writeTripJson( jsonDirectory ):
   print( "Wrote json/trip.json")
 
 
+def makeArmyIcons(  jsonDirectory ):
+
+  imgDirectory = os.path.join( "..", "img","trips", "root" )
+  imgNameList = os.listdir( imgDirectory )
+
+  pathToArmyJson = os.path.join( jsonDirectory, "armees.json")
+
+  with open( pathToArmyJson, 'r') as j:
+    armyData = json.load( j )
+
+  for armyName in armyData:
+
+    for imgName in imgNameList:
+
+      with open( os.path.join( imgDirectory, imgName ),'r') as imgFile:
+        imgText = imgFile.readlines()
+
+      imgText[3] = imgText[3].replace( ">",
+                                        ' fill="%s" >' % armyData[ armyName ][ "admin" ][ "color" ] )
+      
+      outputPath = os.path.join( "..", "img","trips",
+                                                "%s-%s" % ( armyName, imgName ) )
+
+      with open( outputPath, "w" ) as outputImgFile:
+        outputImgFile.write( " ".join( imgText) )
+
+
+
+
 if __name__ == "__main__" : 
   
   rootDataDirectory = os.path.join( "..", "data" ) 
@@ -173,7 +202,9 @@ if __name__ == "__main__" :
   if not os.path.isdir( jsonDirectory ):
     os.mkdir( jsonDirectory )
 
-  translateExcel( rootDataDirectory, jsonDirectory, "armees" )
-  translateExcel( rootDataDirectory, jsonDirectory, "villes" )
+  # translateExcel( rootDataDirectory, jsonDirectory, "armees" )
+  # translateExcel( rootDataDirectory, jsonDirectory, "villes" )
 
-  writeTripJson( jsonDirectory )
+  makeArmyIcons( jsonDirectory )
+
+  # writeTripJson( jsonDirectory )
