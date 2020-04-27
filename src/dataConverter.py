@@ -74,7 +74,7 @@ def addTrip( cityNameTripStart, cityNameTripEnd,
              latLongTripStart, latLongTripEnd,
              timeTrip,
              armyName,
-             color,
+             armyColor,
              armyPopulation,
              tripDescription  ):
 
@@ -87,7 +87,7 @@ def addTrip( cityNameTripStart, cityNameTripEnd,
         "timeTripEnd" : timeTrip[ 1 ],
         "tripDuration" : timeTrip[ 1 ] - timeTrip[ 0 ],
         "armyName" : armyName,
-        "color" : color,
+        "armyColor" : armyColor,
         "armyPopulation" : armyPopulation,
         "tripDescription" : tripDescription
     }
@@ -135,7 +135,7 @@ def writeTripJson( jsonDirectory ):
 
   for armyName in armyData:
 
-    color = armyData[ armyName ][ "admin" ][ "color" ]
+    armyColor = armyData[ armyName ][ "admin" ][ "color" ]
     for tripNum in armyData[ armyName ][ "trajets" ][ "departArrivee" ]:
       
       cityNameTripStart, cityNameTripEnd = \
@@ -153,7 +153,7 @@ def writeTripJson( jsonDirectory ):
                                latLongTripStart, latLongTripEnd,
                                timeTrip,
                                armyName,
-                               color,
+                               armyColor,
                                armyPopulation,
                                tripDescription ) )
 
