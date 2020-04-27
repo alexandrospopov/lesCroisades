@@ -9,8 +9,8 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
 minimalRadius = 10
 var sw = 0;
 var ne = 0;
-var startPeriod = 1000
-var endPeriod =  1200;
+var selectedTimePeriodStart = 12000
+var selectedTimePeriodEnd =  12015;
 var overlay = new google.maps.OverlayView();
 function drawTripMap(  )
 {
@@ -56,18 +56,19 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           .style("opacity", 0);
 
 
-        temporalizedTripList = tripList.filter( 
-          trip => ( trip.yearBegin < endPeriod && trip.yearEnd > startPeriod ) )
-        
+        selectedTripList = tripList.filter( 
+          trip => ( trip.timeTripStart < selectedTimePeriodEnd && 
+                    trip.timeTripEnd > selectedTimePeriodStart ) )
+        console.log(selectedTripList)
         var linkGroup = layer.selectAll(".link")
-                             .data( temporalizedTripList )  
+                             .data( selectedTripList )  
 
         var linkGroupEnter = linkGroup.enter()
                                       .append('g')
                                       .attr('class','link')
-                                      .on("mouseover", d => visibleTripTooltip(d, tooltip, tripList))
-                                      .on("click", d => { printTripInformations( d ) } )
-                                      .on("mouseout", d => hideToolTip( tooltip ));
+                                      .on("mouseover", trip => visibleTripTooltip(trip, tooltip, tripList))
+                                      .on("click", trip => { printTripInformations( trip ) } )
+                                      .on("mouseout", () => hideToolTip( tooltip ));
         
         linkGroupEnter.append("line")
                       .attr('class','link-line')
@@ -80,18 +81,19 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         linkGroup.select('.link-line')
                  .each( drawlink )
-                 .style('stroke', d => { return d.color })
-                 .style('stroke-width', d=>{ return d.nombre/100} ) 
+                 .style('stroke', trip => { return trip.armyColor } )
+                 .style('stroke-width', 
+                                    trip => { return trip.armyPopulation/100 } ) 
 
         linkGroup.select('.link-circle-start')
                  .each( drawlinkCircleStart )
-                 .attr( 'r', d=> { return d.nombre/(2* 100) } )
-                 .style('fill', d=> {return d.color})
+                 .attr( 'r', trip => { return trip.armyPopulation / ( 2 * 100 ) } )
+                 .style('fill', trip => { return trip.armyColor } )
 
         linkGroup.select('.link-circle-end')
                  .each( drawlinkCircleEnd )
-                 .attr( 'r', d=> { return d.nombre/(2* 100) } )
-                 .style('fill', d=> {return d.color})
+                 .attr( 'r', trip => { return trip.armyPopulation / ( 2* 100 ) } )
+                 .style('fill', trip => {return trip.armyColor } )
 
         linkGroup.exit().remove()
 
@@ -102,20 +104,20 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .attr( 'class', 'marker' )
                .attr( 'r' , minimalRadius )
                .each( drawMarker)
-               .on("mouseover", d => visibleCityTooltip(d, tooltip, tripList))
-               .on("mouseout", d => hideToolTip( tooltip ));
+               .on( "mouseover" , d => visibleCityTooltip( d , tooltip, tripList ) )
+               .on( "mouseout" , d => hideToolTip( tooltip ));
 
-          function drawlinkCircleStart( d ){
-            let p1 = new google.maps.LatLng( d.source[0], 
-                                             d.source[1] )
-            let p2 = new google.maps.LatLng( d.target[0], 
-                                             d.target[1] )
+          function drawlinkCircleStart( trip ){
+            let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
+                                             trip.latLongTripStart[1] )
+            let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
+                                             trip.latLongTripEnd[1] )
             p1 = projection.fromLatLngToDivPixel( p1 );
             p2 = projection.fromLatLngToDivPixel( p2 );
             p1 = ajustForBounds( p1 )
             p2 = ajustForBounds( p2 )
 
-            var coordinates  = ajustForTime( d, p1, p2 )
+            var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
             q1 = coordinates[ 0 ]
             q2 = coordinates[ 1 ]
 
@@ -125,17 +127,17 @@ Promise.all([ d3.json( "src/json/trips.json" ),
               .attr('cy', q1[1] );  
           }
 
-          function drawlinkCircleEnd( d ){
-            let p1 = new google.maps.LatLng( d.source[0], 
-                                             d.source[1] )
-            let p2 = new google.maps.LatLng( d.target[0], 
-                                             d.target[1] )
+          function drawlinkCircleEnd( trip ){
+            let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
+                                             trip.latLongTripStart[1] )
+            let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
+                                             trip.latLongTripEnd[1] )
             p1 = projection.fromLatLngToDivPixel( p1 );
             p2 = projection.fromLatLngToDivPixel( p2 );
             p1 = ajustForBounds( p1 )
             p2 = ajustForBounds( p2 )
 
-            var coordinates  = ajustForTime( d, p1, p2 )
+            var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
             q1 = coordinates[ 0 ]
             q2 = coordinates[ 1 ]
 
@@ -146,17 +148,17 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           }
 
 
-          function drawlink( d ) {
-            let p1 = new google.maps.LatLng( d.source[0], 
-                                         d.source[1] )
-            let p2 = new google.maps.LatLng( d.target[0], 
-                                         d.target[1] )
+          function drawlink( trip ) {
+            let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
+                                             trip.latLongTripStart[1] )
+            let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
+                                             trip.latLongTripEnd[1] )
             p1 = projection.fromLatLngToDivPixel( p1 );
             p2 = projection.fromLatLngToDivPixel( p2 );
             p1 = ajustForBounds( p1 )
             p2 = ajustForBounds( p2 )
 
-            var coordinates  = ajustForTime( d, p1, p2 )
+            var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
             q1 = coordinates[ 0 ]
             q2 = coordinates[ 1 ]
 
@@ -170,7 +172,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         function drawMarker(d) {
           
           latLong = new google.maps.LatLng( d.value.Geographie.Latitude,
-                                           d.value.Geographie.Longitude )
+                                            d.value.Geographie.Longitude )
           d = projection.fromLatLngToDivPixel( latLong );
           return d3.select(this)
             .attr( 'cx' , d.x - sw.x )
@@ -186,9 +188,12 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
 function setBounds( nodes ){
   var bounds = new google.maps.LatLngBounds();
+
   d3.entries( nodes ).forEach(function(d){
-    bounds.extend(d.value.latLong = new google.maps.LatLng( d.value.Geographie.Latitude, 
-      d.value.Geographie.Longitude ));
+
+    bounds.extend(d.value.latLong = new google.maps.LatLng( 
+                                                d.value.Geographie.Latitude, 
+                                                d.value.Geographie.Longitude ));
   });
   return bounds
 }
@@ -199,52 +204,75 @@ function ajustForBounds( d ){
   return d 
 }
 
-function ajustForTime( d, p1, p2 ){
+function ajustForSelectedPeriod( trip, p1, p2 ){
 
   let vectorDirect = [ p2.x - p1.x, 
                        p2.y - p1.y] 
   let vectorIndirect = [ p1.x - p2.x,
                          p1.y - p2.y ]
 
+  let tripPeriodStart = selectedTimePeriodStart;
+  let tripPeriodEnd = selectedTimePeriodEnd;
 
-  let tripPeriodEnd = endPeriod;
-  let tripPeriodBegin = startPeriod;
+  if ( tripPeriodEnd > trip.timeTripEnd ){ tripPeriodEnd = trip.timeTripEnd }
+  if ( tripPeriodStart < trip.timeTripStart ){ tripPeriodStart = trip.timeTripStart }
 
-  if ( endPeriod > d.yearEnd ){ tripPeriodEnd = d.yearEnd }
-  if ( startPeriod < d.yearBegin ){ tripPeriodBegin = d.yearBegin }
+  const q2 = [ 
+  p1.x + vectorDirect[0] * ( tripPeriodEnd - trip.timeTripStart ) / trip.tripDuration,
+  p1.y + vectorDirect[1] * ( tripPeriodEnd - trip.timeTripStart ) / trip.tripDuration 
+]
 
-  const q2 = [ p1.x + vectorDirect[0] * ( tripPeriodEnd - d.yearBegin ) / d.tripDuration,
-  p1.y + vectorDirect[1] * ( tripPeriodEnd - d.yearBegin ) / d.tripDuration ]
-
-  const q1 = [ p2.x + vectorIndirect[0] * ( d.yearEnd - tripPeriodBegin ) / d.tripDuration,
-  p2.y + vectorIndirect[1] * ( d.yearEnd - tripPeriodBegin ) / d.tripDuration ]
+  const q1 = [ 
+  p2.x + vectorIndirect[0] * ( trip.timeTripEnd - tripPeriodStart ) / trip.tripDuration,
+  p2.y + vectorIndirect[1] * ( trip.timeTripEnd - tripPeriodStart ) / trip.tripDuration 
+]
 
   return [ q1, q2 ]
 }
 
 function setSouthWest( projection, bounds, padding){
-  var sw = projection.fromLatLngToDivPixel(bounds.getSouthWest());
+  var sw = projection.fromLatLngToDivPixel( bounds.getSouthWest() );
   sw.x -= padding;
   sw.y += padding;
   return sw;
 }
 
 function setNorthEast( projection,  bounds, padding){
-  var ne = projection.fromLatLngToDivPixel(bounds.getNorthEast());
+  var ne = projection.fromLatLngToDivPixel( bounds.getNorthEast() );
   ne.x += padding;
   ne.y -= padding;
   return ne;
 }
 
-function printTripInformations( d ){
+function deduceMonthAndYear( timeStamp ){
+  let monthNames = [
+    "Janvier",
+    "Février",
+    "Mars",
+    "Avril",
+    "Mai",
+    "Juin",
+    "Juillet",
+    "Août",
+    "Septembre",
+    "Octobre",
+    "Novembre",
+    "Décembre"
+  ]
+  let year = Math.floor( timeStamp / 12 )
+  let month = monthNames[ timeStamp % 12  ]
+  return month + " " + year
+}
+
+function printTripInformations( trip ){
 
   var modal = document.getElementById("myModal");
   var span = document.getElementsByClassName("close")[0];
   var modalParagraph = document.getElementById("modalParagraph")
 
-  modalTitle.textContent = d.army + " : De " + d.sourceCity + " vers " + d.targetCity; 
-  modalDates.textContent = d.yearBegin + ' - ' + d.yearEnd;
-  modalParagraph.textContent = d.description ;
+  modalTitle.textContent = trip.armyName + " : De " + trip.cityNameTripStart + " vers " + trip.cityNameTripEnd; 
+  modalDates.textContent = deduceMonthAndYear( trip.timeTripStart ) + ' - ' + deduceMonthAndYear( trip.timeTripEnd );
+  modalParagraph.textContent = trip.tripDescription ;
   modal.style.display = "block";
 
   // When the user clicks on <span> (x), close the modal
@@ -260,12 +288,12 @@ function printTripInformations( d ){
   }
 }
 
-function visibleTripTooltip( d, tooltip, tripList ){
+function visibleTripTooltip( trip, tooltip, tripList ){
   tooltip.style("left", (d3.event.pageX + 5) + "px")
          .style("top", (d3.event.pageY - 28) + "px")
-         .html( d.army + "<br>" 
-                + "De : " + d.sourceCity + "<br>"
-                + "Vers : " + d.targetCity + "." )
+         .html( trip.army + "<br>" 
+                + "De : " + trip.cityNameTripStart + "<br>"
+                + "Vers : " + trip.cityNameTripEnd + "." )
          .transition()
          .style("opacity", .9);
 }
@@ -300,4 +328,4 @@ function updateCities( range ){
 }
 
 
-drawTripMap( 1000, 1200)
+drawTripMap( selectedTimePeriodStart, selectedTimePeriodEnd )

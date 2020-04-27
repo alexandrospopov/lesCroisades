@@ -39,4 +39,4 @@ function setSlider( startYear, endYear ){
   brush.move(brushg, [ startYear, endYear ].map(x));
 
 }
-setSlider( 1000, 1200 )
+setSlider( 12000, 12015 )
