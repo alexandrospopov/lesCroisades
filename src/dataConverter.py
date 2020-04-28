@@ -76,7 +76,8 @@ def addTrip( cityNameTripStart, cityNameTripEnd,
              armyName,
              armyColor,
              armyPopulation,
-             tripDescription  ):
+             tripDescription,
+             stopCategory  ):
 
   trip = {
         "latLongTripStart": latLongTripStart,
@@ -89,7 +90,8 @@ def addTrip( cityNameTripStart, cityNameTripEnd,
         "armyName" : armyName,
         "armyColor" : armyColor,
         "armyPopulation" : armyPopulation,
-        "tripDescription" : tripDescription
+        "tripDescription" : tripDescription,
+        "stopCategory" : stopCategory
     }
 
   return trip
@@ -149,15 +151,18 @@ def writeTripJson( jsonDirectory ):
 
       armyPopulation = armyData[ armyName ][ "trajets" ][ "nombre" ][ tripNum ]
       tripDescription = armyData[ armyName ][ "trajets" ][ "description" ][ tripNum ]
+
+      stopCategory = armyData[ armyName ][ "trajets" ][ "etat" ][ tripNum ]
+
       listAllTrips.append( addTrip( cityNameTripStart, cityNameTripEnd, 
                                latLongTripStart, latLongTripEnd,
                                timeTrip,
                                armyName,
                                armyColor,
                                armyPopulation,
-                               tripDescription ) )
+                               tripDescription,
+                               stopCategory ) )
 
-  print( listAllTrips )
 
   with open( pathToTripJson, "w") as j:
     json.dump( listAllTrips, j) 
@@ -166,6 +171,8 @@ def writeTripJson( jsonDirectory ):
 
 
 def makeArmyIcons(  jsonDirectory ):
+
+  print( "Making icons")
 
   imgDirectory = os.path.join( "..", "img","trips", "root" )
   imgNameList = os.listdir( imgDirectory )
@@ -182,16 +189,26 @@ def makeArmyIcons(  jsonDirectory ):
       with open( os.path.join( imgDirectory, imgName ),'r') as imgFile:
         imgText = imgFile.readlines()
 
-      imgText[3] = imgText[3].replace( ">",
-                                        ' fill="%s" >' % armyData[ armyName ][ "admin" ][ "color" ] )
+      for indexLine, line in enumerate( imgText ) :
+
+        if '<svg' in line:
+
+          imgText[ indexLine ] = line.replace( 
+                  '<svg',
+                '<svg fill="%s" ' % armyData[ armyName ][ "admin" ][ "color" ])
+          break
       
+      else:   
+
+        raise IOError( "%s does not have '<svg' " )
+
       outputPath = os.path.join( "..", "img","trips",
                                                 "%s-%s" % ( armyName, imgName ) )
 
       with open( outputPath, "w" ) as outputImgFile:
         outputImgFile.write( " ".join( imgText) )
-
-
+      
+      print( "  Wrote %s-%s" % ( armyName, imgName ))
 
 
 if __name__ == "__main__" : 
@@ -202,9 +219,9 @@ if __name__ == "__main__" :
   if not os.path.isdir( jsonDirectory ):
     os.mkdir( jsonDirectory )
 
-  # translateExcel( rootDataDirectory, jsonDirectory, "armees" )
-  # translateExcel( rootDataDirectory, jsonDirectory, "villes" )
+  translateExcel( rootDataDirectory, jsonDirectory, "armees" )
+  translateExcel( rootDataDirectory, jsonDirectory, "villes" )
 
   makeArmyIcons( jsonDirectory )
 
-  # writeTripJson( jsonDirectory )
+  writeTripJson( jsonDirectory )
