@@ -79,7 +79,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                       .attr('class','link')
                                       .on("mouseover", trip => visibleTripTooltip(trip ))
                                       .on("click", trip => { printTripInformations( trip ) } )
-                                      .on("mouseout", () => hideToolTip( tooltip ));
+                                      .on("mouseout", () => hideToolTip());
         
         linkGroupEnter.append("line")
                       .attr('class','link-line')
@@ -119,10 +119,12 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                               .each( drawTripStopMarker )
                                               .on("mouseover", trip => visibleTripTooltip(trip ))
                                               .on("click", trip => { printTripInformations( trip ) } )
-                                              .on("mouseout", () => hideToolTip( tooltip ));     
+                                              .on("mouseout", () => hideToolTip());
 
 
         tripStops.each( drawTripStopMarker )
+                 .attr( 'xlink:href', d => '../../img/trips/' + d.armyName + '-' + d.stopCategory +'.svg')
+
         tripStops.exit().remove()
 
                   
@@ -135,7 +137,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .attr( 'r' , minimalRadius )
                .each( drawMarker)
                .on( "mouseover" , d => visibleCityTooltip( d , tooltip, tripList ) )
-               .on( "mouseout" , d => hideToolTip( tooltip ));
+               .on( "mouseout" , d => hideToolTip());
 
           function drawlinkCircleStart( trip ){
             let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
@@ -353,8 +355,8 @@ function visibleCityTooltip( d, tooltip, tripList ){
          .style("opacity", .9);
 }
 
-function hideToolTip( tooltip ){ 
-  tooltip.transition()
+function hideToolTip(){ 
+  d3.select('.tooltip').transition()
          .style("opacity", 0) 
          
 }
