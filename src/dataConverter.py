@@ -77,7 +77,8 @@ def addTrip( cityNameTripStart, cityNameTripEnd,
              armyColor,
              armyPopulation,
              tripDescription,
-             stopCategory  ):
+             stopCategory,
+             stopAngle  ):
 
   trip = {
         "latLongTripStart": latLongTripStart,
@@ -91,7 +92,8 @@ def addTrip( cityNameTripStart, cityNameTripEnd,
         "armyColor" : armyColor,
         "armyPopulation" : armyPopulation,
         "tripDescription" : tripDescription,
-        "stopCategory" : stopCategory
+        "stopCategory" : stopCategory,
+        "stopAngle" : stopAngle
     }
 
   return trip
@@ -135,6 +137,8 @@ def writeTripJson( jsonDirectory ):
 
   listAllTrips = []
 
+  stopAngle = -1
+
   for armyName in armyData:
 
     armyColor = armyData[ armyName ][ "admin" ][ "color" ]
@@ -154,6 +158,8 @@ def writeTripJson( jsonDirectory ):
 
       stopCategory = armyData[ armyName ][ "trajets" ][ "etat" ][ tripNum ]
 
+      stopAngle += 1 
+
       listAllTrips.append( addTrip( cityNameTripStart, cityNameTripEnd, 
                                latLongTripStart, latLongTripEnd,
                                timeTrip,
@@ -161,7 +167,8 @@ def writeTripJson( jsonDirectory ):
                                armyColor,
                                armyPopulation,
                                tripDescription,
-                               stopCategory ) )
+                               stopCategory, 
+                               stopAngle ) )
 
 
   with open( pathToTripJson, "w") as j:

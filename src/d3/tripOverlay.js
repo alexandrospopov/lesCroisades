@@ -7,10 +7,12 @@ var map = new google.maps.Map(d3.select("#googleMap").node(), {
 
 
 minimalRadius = 10
+sizeLogo = 40
 var sw = 0;
 var ne = 0;
 var selectedTimePeriodStart = 12000
 var selectedTimePeriodEnd =  12015;
+var incrementAngular = 0;
 var overlay = new google.maps.OverlayView();
 function drawTripMap(  )
 {
@@ -111,10 +113,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         var tripStopsEnter = tripStops.enter().append('image')
                                               .attr( 'xlink:href', d => '../../img/trips/' + d.armyName + '-' + d.stopCategory +'.svg')
-                                              .attr('width', 40)
-                                              .attr('height', 40)
+                                              .attr('width', sizeLogo)
+                                              .attr('height', sizeLogo)
                                               .attr( 'class', 'tripStop' )
-                                              .attr( 'r' , 2 * minimalRadius )
                                               .each( drawTripStopMarker )
                                               .on("mouseover", trip => visibleTripTooltip(trip ))
                                               .on("click", trip => { printTripInformations( trip ) } )
@@ -203,8 +204,13 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             latLong = new google.maps.LatLng( trip.latLongTripStart[0],
                                               trip.latLongTripStart[1])
             d = projection.fromLatLngToDivPixel( latLong );
+            console.log()
+            let incrementAngular = trip.stopAngle * Math.PI / 8;
+            let incrementX = sizeLogo * Math.cos( incrementAngular )
+            let incrementY = sizeLogo * Math.sin( incrementAngular )
+
             return d3.select(this)
-                     .attr("transform", "translate(" + (d.x - sw.x) + "," + ( d.y - ne.y) + ")")
+                     .attr("transform", "translate(" + ( d.x - sw.x + incrementX - (sizeLogo -10) ) + "," + ( d.y - ne.y + incrementY - (sizeLogo - 10)) + ")")
           }
 
 
