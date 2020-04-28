@@ -112,7 +112,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                              .data( selectedTripStopList )
 
         var tripStopsEnter = tripStops.enter().append('image')
-                                              .attr( 'xlink:href', d => '../../img/trips/' + d.armyName + '-' + d.stopCategory +'.svg')
+                                              .attr( 'xlink:href', d => '../../img/trips/' + d.armyId + '-' + d.stopCategory +'.svg')
                                               .attr('width', sizeLogo)
                                               .attr('height', sizeLogo)
                                               .attr( 'class', 'tripStop' )
@@ -123,7 +123,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
 
         tripStops.each( drawTripStopMarker )
-                 .attr( 'xlink:href', d => '../../img/trips/' + d.armyName + '-' + d.stopCategory +'.svg')
+                 .attr( 'xlink:href', d => '../../img/trips/' + d.armyId + '-' + d.stopCategory +'.svg')
 
         tripStops.exit().remove()
 
@@ -206,7 +206,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             latLong = new google.maps.LatLng( trip.latLongTripStart[0],
                                               trip.latLongTripStart[1])
             d = projection.fromLatLngToDivPixel( latLong );
-            console.log()
             let incrementAngular = trip.stopAngle * Math.PI / 8;
             let incrementX = sizeLogo * Math.cos( incrementAngular )
             let incrementY = sizeLogo * Math.sin( incrementAngular )

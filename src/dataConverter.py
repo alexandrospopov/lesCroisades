@@ -73,7 +73,7 @@ def getLatLongForCity( cityData, cityName ):
 def addTrip( cityNameTripStart, cityNameTripEnd, 
              latLongTripStart, latLongTripEnd,
              timeTrip,
-             armyName,
+             armyId, armyName,
              armyColor,
              armyPopulation,
              tripDescription,
@@ -89,6 +89,7 @@ def addTrip( cityNameTripStart, cityNameTripEnd,
         "timeTripEnd" : timeTrip[ 1 ],
         "tripDuration" : timeTrip[ 1 ] - timeTrip[ 0 ],
         "armyName" : armyName,
+        "armyId" : armyId,
         "armyColor" : armyColor,
         "armyPopulation" : armyPopulation,
         "tripDescription" : tripDescription,
@@ -139,31 +140,32 @@ def writeTripJson( jsonDirectory ):
 
   stopAngle = -1
 
-  for armyName in armyData:
+  for armyId in armyData:
 
-    armyColor = armyData[ armyName ][ "admin" ][ "color" ]
-    for tripNum in armyData[ armyName ][ "trajets" ][ "departArrivee" ]:
+    armyColor = armyData[ armyId ][ "admin" ][ "color" ]
+    armyName = armyData[ armyId ][ "admin" ][ "fullName" ]
+    for tripNum in armyData[ armyId ][ "trajets" ][ "departArrivee" ]:
       
       cityNameTripStart, cityNameTripEnd = \
-        armyData[ armyName ][ "trajets" ][ "departArrivee" ][ tripNum ].split( " - " )
+        armyData[ armyId ][ "trajets" ][ "departArrivee" ][ tripNum ].split( " - " )
 
       latLongTripStart = getLatLongForCity( cityData, cityNameTripStart )
       latLongTripEnd = getLatLongForCity( cityData, cityNameTripEnd )
 
       timeTrip  = analyseTimeData(
-                      armyData[ armyName ][ "trajets" ][ "annees" ][ tripNum ] )
+                      armyData[ armyId ][ "trajets" ][ "annees" ][ tripNum ] )
 
-      armyPopulation = armyData[ armyName ][ "trajets" ][ "nombre" ][ tripNum ]
-      tripDescription = armyData[ armyName ][ "trajets" ][ "description" ][ tripNum ]
+      armyPopulation = armyData[ armyId ][ "trajets" ][ "nombre" ][ tripNum ]
+      tripDescription = armyData[ armyId ][ "trajets" ][ "description" ][ tripNum ]
 
-      stopCategory = armyData[ armyName ][ "trajets" ][ "etat" ][ tripNum ]
+      stopCategory = armyData[ armyId ][ "trajets" ][ "etat" ][ tripNum ]
 
       stopAngle += 1 
 
       listAllTrips.append( addTrip( cityNameTripStart, cityNameTripEnd, 
                                latLongTripStart, latLongTripEnd,
                                timeTrip,
-                               armyName,
+                               armyId, armyName,
                                armyColor,
                                armyPopulation,
                                tripDescription,
@@ -189,7 +191,7 @@ def makeArmyIcons(  jsonDirectory ):
   with open( pathToArmyJson, 'r') as j:
     armyData = json.load( j )
 
-  for armyName in armyData:
+  for armyId in armyData:
 
     for imgName in imgNameList:
 
@@ -202,7 +204,7 @@ def makeArmyIcons(  jsonDirectory ):
 
           imgText[ indexLine ] = line.replace( 
                   '<svg',
-                '<svg fill="%s" ' % armyData[ armyName ][ "admin" ][ "color" ])
+                '<svg fill="%s" ' % armyData[ armyId ][ "admin" ][ "color" ])
           break
       
       else:   
@@ -210,12 +212,12 @@ def makeArmyIcons(  jsonDirectory ):
         raise IOError( "%s does not have '<svg' " )
 
       outputPath = os.path.join( "..", "img","trips",
-                                                "%s-%s" % ( armyName, imgName ) )
+                                                "%s-%s" % ( armyId, imgName ) )
 
       with open( outputPath, "w" ) as outputImgFile:
         outputImgFile.write( " ".join( imgText) )
       
-      print( "  Wrote %s-%s" % ( armyName, imgName ))
+      print( "  Wrote %s-%s" % ( armyId, imgName ))
 
 
 if __name__ == "__main__" : 
