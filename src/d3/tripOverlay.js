@@ -25,8 +25,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
     cityList = files[ 2 ]
 
     const armyPopulationScale = d3.scaleLinear()
-                                  .range([1,15])
-                                  .domain(  [0,2000] )
+                                  .range([2,20])
+                                  .domain(  d3.extent( tripList, d => {return d.armyPopulation}) )
 
     var divArmyChoice = d3.select('#armyChoice')
 
