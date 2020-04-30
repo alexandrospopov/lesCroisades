@@ -40,6 +40,12 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                               .attr('name', d=> d.value.admin.fullName )
                               .attr('value', d=> d.value.admin.fullName )
                               .attr('checked', "checked" )
+                              .on('click', function( d ){
+                                let currentOpacity = this.checked ? 1 : 0;
+                                d3.selectAll( '.link')
+                                  .filter( e=> { return d.key == e.armyId } )
+                                  .style('opacity', currentOpacity)
+                              })
 
     divArmyChoiceCheckBoxEnter.append('label')
                               .attr( 'class','checkBoxDiv_label' )
