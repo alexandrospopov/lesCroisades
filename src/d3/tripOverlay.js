@@ -45,6 +45,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                 d3.selectAll( '.link')
                                   .filter( e=> { return d.key == e.armyId } )
                                   .style('opacity', currentOpacity)
+                                d3.selectAll('.tripStop')
+                                  .filter( e=> { return d.key == e.armyId } )
+                                  .style('opacity', currentOpacity)
                               })
 
     divArmyChoiceCheckBoxEnter.append('label')
