@@ -143,7 +143,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                              .data( selectedTripStopList )
 
         var tripStopsEnter = tripStops.enter().append('image')
-                                              .attr( 'xlink:href', d => '../../img/trips/' + d.armyId + '-' + d.stopCategory +'.svg')
+                                              .attr( 'xlink:href', d => 'img/trips/' + d.armyId + '-' + d.stopCategory +'.svg')
                                               .attr('width', sizeLogo)
                                               .attr('height', sizeLogo)
                                               .attr( 'class', 'tripStop' )
@@ -154,7 +154,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
 
         tripStops.each( drawTripStopMarker )
-                 .attr( 'xlink:href', d => '../../img/trips/' + d.armyId + '-' + d.stopCategory +'.svg')
+                 .attr( 'xlink:href', d => 'img/trips/' + d.armyId + '-' + d.stopCategory +'.svg')
 
         tripStops.exit().remove()
 
@@ -164,7 +164,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .data(d3.entries( cityList ))
                .each( drawMarker )
              .enter().append('image')
-               .attr( 'xlink:href', d => '../../img/cities/' + d.value.Geographie.Etat +'.svg')
+               .attr( 'xlink:href', d => 'img/cities/' + d.value.Geographie.Etat +'.svg')
                .attr('width', sizeLogo)
                .attr('height', sizeLogo)
                .attr( 'class', 'marker' )
