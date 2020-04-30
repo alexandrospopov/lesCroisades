@@ -41,13 +41,13 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                               .attr('value', d=> d.value.admin.fullName )
                               .attr('checked', "checked" )
                               .on('click', function( d ){
-                                let currentOpacity = this.checked ? 1 : 0;
+                                let currentVisibility = this.checked ? "visible" : "hidden";
                                 d3.selectAll( '.link')
                                   .filter( e=> { return d.key == e.armyId } )
-                                  .style('opacity', currentOpacity)
+                                  .attr('visibility', currentVisibility)
                                 d3.selectAll('.tripStop')
                                   .filter( e=> { return d.key == e.armyId } )
-                                  .style('opacity', currentOpacity)
+                                  .attr('visibility', currentVisibility)
                               })
 
     divArmyChoiceCheckBoxEnter.append('label')
