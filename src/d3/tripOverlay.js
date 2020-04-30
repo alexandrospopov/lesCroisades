@@ -391,10 +391,6 @@ function updateLinks( range ){
   console.log(range)
   drawTripMap( range[0], range[1])
   
-  // d3.selectAll( ".link" )
-  //      .filter( d => d.nombre < range[0] )
-  //      .style("opacity", 0)
-  //      .each( function(d,i) {console.log(d)})
 }
 
 
