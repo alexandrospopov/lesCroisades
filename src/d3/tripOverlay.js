@@ -45,38 +45,12 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                               .attr( 'class','checkBoxDiv_label' )
                               .html( d=> d.value.admin.fullName )
 
-    //               var linkGroupEnter = linkGroup.enter()
-    //               .append('g')
-    //               .attr('class','link')
-    //               .on("mouseover", trip => visibleTripTooltip(trip ))
-    //               .on("click", trip => { printTripInformations( trip ) } )
-    //               .on("mouseout", () => hideToolTip());
-
-    // linkGroupEnter.append("line")
-    //   .attr('class','link-line')
-
-    // linkGroupEnter.append("circle")
-    //   .attr('class','link-circle-start')
-
-    // linkGroupEnter.append("circle")
-    //   .attr('class','link-circle-end')
-
-    // linkGroup.select('.link-line')
-    // .each( drawlink )
-    // .style('stroke', trip => { return trip.armyColor } )
-    // .style('stroke-width', 
-    //                 trip => { return trip.armyPopulation/100 } ) 
-
 
     bounds = setBounds( cityList )
     map.fitBounds( bounds );
 
     overlay.setMap(null);
     overlay.onAdd = function() {
-      var tooltip = d3.select(this.getPanes().overlayMouseTarget )
-      // .append("div")
-      // .attr("class", "tooltip")
-      // .style("opacity", 0);
 
 
       var layer = d3.select(this.getPanes().overlayMouseTarget )
