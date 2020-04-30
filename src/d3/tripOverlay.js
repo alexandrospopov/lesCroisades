@@ -374,7 +374,6 @@ function visibleTripTooltip( trip ){
 }
 
 function visibleCityTooltip( d, tooltip, tripList ){
-  console.log(d)
   tooltip.style("left", (d3.event.pageX + 5) + "px")
          .style("top", (d3.event.pageY - 28) + "px")
          .html( d.key)
