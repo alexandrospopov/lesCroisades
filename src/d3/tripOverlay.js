@@ -24,6 +24,10 @@ Promise.all([ d3.json( "src/json/trips.json" ),
     armyList = files[ 1 ]
     cityList = files[ 2 ]
 
+    const armyPopulationScale = d3.scaleLinear()
+                                  .range([1,15])
+                                  .domain(  [0,2000] )
+
     var divArmyChoice = d3.select('#armyChoice')
 
     var divArmyChoiceCheckBox = divArmyChoice.selectAll('.checkBoxDiv')
@@ -121,16 +125,16 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                  .each( drawlink )
                  .style('stroke', trip => { return trip.armyColor } )
                  .style('stroke-width', 
-                                    trip => { return trip.armyPopulation/100 } ) 
+                                    trip => { return armyPopulationScale( trip.armyPopulation ) } ) 
 
         linkGroup.select('.link-circle-start')
                  .each( drawlinkCircleStart )
-                 .attr( 'r', trip => { return trip.armyPopulation / ( 2 * 100 ) } )
+                 .attr( 'r', trip => { return armyPopulationScale( trip.armyPopulation / 2  ) } )
                  .style('fill', trip => { return trip.armyColor } )
 
         linkGroup.select('.link-circle-end')
                  .each( drawlinkCircleEnd )
-                 .attr( 'r', trip => { return trip.armyPopulation / ( 2 * 100 ) } )
+                 .attr( 'r', trip => { return armyPopulationScale( trip.armyPopulation / 2  ) } )
                  .style('fill', trip => {return trip.armyColor } )
 
         linkGroup.exit().remove()
