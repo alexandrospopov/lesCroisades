@@ -24,6 +24,50 @@ Promise.all([ d3.json( "src/json/trips.json" ),
     armyList = files[ 1 ]
     cityList = files[ 2 ]
 
+    var divArmyChoice = d3.select('#armyChoice')
+
+    var divArmyChoiceCheckBox = divArmyChoice.selectAll('.checkBoxDiv')
+                                              .data( d3.entries(armyList) ) 
+
+    var divArmyChoiceCheckBoxEnter = divArmyChoiceCheckBox.enter()
+                 .append('div')
+                 .attr('class','checkBoxDiv')
+
+    divArmyChoiceCheckBoxEnter.append('input')
+                              .attr('class','checkBoxDiv_cb')
+                              .attr('type','checkbox')
+                              .attr('id', d => 'cb_'+ d.value.admin.id )
+                              .attr('name', d=> d.value.admin.fullName )
+                              .attr('value', d=> d.value.admin.fullName )
+                              .attr('checked', "checked" )
+
+    divArmyChoiceCheckBoxEnter.append('label')
+                              .attr( 'class','checkBoxDiv_label' )
+                              .html( d=> d.value.admin.fullName )
+
+    //               var linkGroupEnter = linkGroup.enter()
+    //               .append('g')
+    //               .attr('class','link')
+    //               .on("mouseover", trip => visibleTripTooltip(trip ))
+    //               .on("click", trip => { printTripInformations( trip ) } )
+    //               .on("mouseout", () => hideToolTip());
+
+    // linkGroupEnter.append("line")
+    //   .attr('class','link-line')
+
+    // linkGroupEnter.append("circle")
+    //   .attr('class','link-circle-start')
+
+    // linkGroupEnter.append("circle")
+    //   .attr('class','link-circle-end')
+
+    // linkGroup.select('.link-line')
+    // .each( drawlink )
+    // .style('stroke', trip => { return trip.armyColor } )
+    // .style('stroke-width', 
+    //                 trip => { return trip.armyPopulation/100 } ) 
+
+
     bounds = setBounds( cityList )
     map.fitBounds( bounds );
 
