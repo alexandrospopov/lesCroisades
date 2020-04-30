@@ -156,9 +156,11 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         layer.selectAll( '.marker' )
                .data(d3.entries( cityList ))
                .each( drawMarker )
-             .enter().append( 'circle' )
+             .enter().append('image')
+               .attr( 'xlink:href', d => '../../img/cities/' + d.value.Geographie.Etat +'.svg')
+               .attr('width', sizeLogo)
+               .attr('height', sizeLogo)
                .attr( 'class', 'marker' )
-               .attr( 'r' , minimalRadius )
                .each( drawMarker)
                .on( "mouseover" , d => visibleCityTooltip( d , tooltip, tripList ) )
                .on( "mouseout" , d => hideToolTip());
@@ -246,8 +248,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                             d.value.Geographie.Longitude )
           d = projection.fromLatLngToDivPixel( latLong );
           return d3.select(this)
-            .attr( 'cx' , d.x - sw.x )
-            .attr( 'cy' , d.y - ne.y );
+            .attr("transform", "translate(" + ( d.x - sw.x - sizeLogo/2 ) + "," + ( d.y - ne.y - sizeLogo/2 )  + ")")
         }
       };
     };
