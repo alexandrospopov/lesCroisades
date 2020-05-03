@@ -18,7 +18,7 @@ function drawTripMap(  )
 {
 Promise.all([ d3.json( "src/json/trips.json" ),
               d3.json( "src/json/armees.json" ),
-              d3.json( "src/json/villes.json" ), ]).then(function( files ) 
+              d3.json( "src/json/endroits.json" ), ]).then(function( files ) 
 {
     tripList = files[ 0 ]
     armyList = files[ 1 ]
@@ -103,7 +103,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
 
         var linkGroup = layer.selectAll(".link")
-                             .data( selectedTripList )  
+                            //  .data( selectedTripList )   
 
         var linkGroupEnter = linkGroup.enter()
                                       .append('g')
