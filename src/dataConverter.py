@@ -112,28 +112,75 @@ def getCityNum( listAllCities, cityToFind ):
     raise ValueError("%s not part of listAllCities." % cityToFind )
 
 
-def analyseTimeData( timeTrip ):
+def getDay( moment ):
+
+
+  if 'Debut' in moment:
+
+    return 5, moment.replace('Debut','')
+
+  elif 'Mi' in moment:
+
+    return 15, moment.replace('Mi','')
+
+  elif 'Fin' in moment:
+
+    return 25, moment.replace('Fin','')
+
+  elif len( moment.split('/') ) == 3 :
+
+    return ( moment.split('/')[ 0 ],
+             '/'.join( moment.split('/')[ 1: ] ) )
+
+  else:
+
+    return 15, moment
+
+
+def analyseKnownTimeTrip( timeTrip ):
 
   timeTripMoment = timeTrip.split( ' - ' )
 
   for index, moment in enumerate( timeTripMoment ) :
-    [ month, year ] = moment.split('/')
-    timeTripMoment[ index ] = int( year ) * 12 + int( month )
+    day, momentWoDay = getDay( moment )
+    [ month, year ] = momentWoDay.split('/')
+    timeTripMoment[ index ] =  ( int( year ) * 12 * 30 + 
+                                 int( month ) * 30 + 
+                                 int( day ) )
 
   return timeTripMoment 
+
+def analyseTimeData( armyData, armyId, tripNum ):
+
+  timeTrip = armyData[ armyId ][ "trajets" ][ "annees" ][ tripNum ] 
+
+  if ( 'Entre' in timeTrip or 
+        'Hiver' in timeTrip ):
+
+    return analyseKnownTimeTrip( 
+              armyData[ armyId ][ "trajets" ][ "anneesDecidees" ][ tripNum ] )
+
+  elif ' - ' in timeTrip:
+
+    return analyseKnownTimeTrip( timeTrip )
+
+  else:
+
+    raise ValueError('%s must contain eiter " - " or "Entre".' % timeTrip )
+
 
 
 def writeTripJson( jsonDirectory ):
   
   pathToArmyJson = os.path.join( jsonDirectory, "armees.json")
-  pathToCitiesJson = os.path.join( jsonDirectory, "villes.json")
+  pathToSpotsJson = os.path.join( jsonDirectory, "endroits.json")
   pathToTripJson = os.path.join( jsonDirectory, "trips.json")
 
   with open( pathToArmyJson, 'r') as j:
     armyData = json.load( j )
 
-  with open( pathToCitiesJson, 'r') as j:
-    cityData = json.load( j )
+  with open( pathToSpotsJson, 'r') as j:
+    spotsData = json.load( j )
 
 
   listAllTrips = []
@@ -145,15 +192,19 @@ def writeTripJson( jsonDirectory ):
     armyColor = armyData[ armyId ][ "admin" ][ "color" ]
     armyName = armyData[ armyId ][ "admin" ][ "fullName" ]
     for tripNum in armyData[ armyId ][ "trajets" ][ "departArrivee" ]:
+
+
       
       cityNameTripStart, cityNameTripEnd = \
         armyData[ armyId ][ "trajets" ][ "departArrivee" ][ tripNum ].split( " - " )
 
-      latLongTripStart = getLatLongForCity( cityData, cityNameTripStart )
-      latLongTripEnd = getLatLongForCity( cityData, cityNameTripEnd )
+      # print( cityNameTripStart, cityNameTripEnd )
 
-      timeTrip  = analyseTimeData(
-                      armyData[ armyId ][ "trajets" ][ "annees" ][ tripNum ] )
+      print(armyId)
+      latLongTripStart = getLatLongForCity( spotsData, cityNameTripStart )
+      latLongTripEnd = getLatLongForCity( spotsData, cityNameTripEnd )
+
+      timeTrip  = analyseTimeData( armyData, armyId, tripNum )
 
       armyPopulation = armyData[ armyId ][ "trajets" ][ "nombre" ][ tripNum ]
       tripDescription = armyData[ armyId ][ "trajets" ][ "description" ][ tripNum ]
@@ -229,7 +280,7 @@ if __name__ == "__main__" :
     os.mkdir( jsonDirectory )
 
   translateExcel( rootDataDirectory, jsonDirectory, "armees" )
-  translateExcel( rootDataDirectory, jsonDirectory, "villes" )
+  translateExcel( rootDataDirectory, jsonDirectory, "endroits" )
 
   makeArmyIcons( jsonDirectory )
 
