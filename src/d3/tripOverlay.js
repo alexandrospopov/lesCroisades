@@ -103,7 +103,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
 
         var linkGroup = layer.selectAll(".link")
-                            //  .data( selectedTripList )   
+                             .data( selectedTripList )   
 
         var linkGroupEnter = linkGroup.enter()
                                       .append('g')
@@ -124,17 +124,16 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         linkGroup.select('.link-line')
                  .each( drawlink )
                  .style('stroke', trip => { return trip.armyColor } )
-                 .style('stroke-width', 
-                                    trip => { return armyPopulationScale( trip.armyPopulation ) } ) 
+                 .style('stroke-width', '6px' ) 
 
         linkGroup.select('.link-circle-start')
                  .each( drawlinkCircleStart )
-                 .attr( 'r', trip => { return armyPopulationScale( trip.armyPopulation / 2  ) } )
+                 .attr( 'r', "3" )
                  .style('fill', trip => { return trip.armyColor } )
 
         linkGroup.select('.link-circle-end')
                  .each( drawlinkCircleEnd )
-                 .attr( 'r', trip => { return armyPopulationScale( trip.armyPopulation / 2  ) } )
+                 .attr( 'r', "3" )
                  .style('fill', trip => {return trip.armyColor } )
 
         linkGroup.exit().remove()
@@ -185,7 +184,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
             q1 = coordinates[ 0 ]
             q2 = coordinates[ 1 ]
-
 
             return d3.select(this)
               .attr('cx', q1[0] )
@@ -392,7 +390,6 @@ function hideToolTip(){
 }
 
 function updateLinks( range ){
-  console.log(range)
   drawTripMap( range[0], range[1])
   
 }
