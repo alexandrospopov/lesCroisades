@@ -348,7 +348,7 @@ function printTripInformations( trip ){
   var modalParagraph = document.getElementById("modalParagraph")
 
   modalTitle.textContent = trip.armyName + " : De " + trip.cityNameTripStart + " vers " + trip.cityNameTripEnd; 
-  modalDates.textContent = deduceMonthAndYear( trip.timeTripStart ) + ' - ' + deduceMonthAndYear( trip.timeTripEnd );
+  modalDates.textContent = trip.timeTripText;
   modalParagraph.textContent = trip.tripDescription ;
   modal.style.display = "block";
 
