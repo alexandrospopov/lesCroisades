@@ -72,7 +72,7 @@ def getLatLongForCity( cityData, cityName ):
 
 def addTrip( cityNameTripStart, cityNameTripEnd, 
              latLongTripStart, latLongTripEnd,
-             timeTrip,
+             timeTripText, timeTripSlider,
              armyId, armyName,
              armyColor,
              armyPopulation,
@@ -85,9 +85,11 @@ def addTrip( cityNameTripStart, cityNameTripEnd,
         "latLongTripEnd": latLongTripEnd,
         "cityNameTripStart" : cityNameTripStart,
         "cityNameTripEnd" : cityNameTripEnd,
-        "timeTripStart" : timeTrip[ 0 ],
-        "timeTripEnd" : timeTrip[ 1 ],
-        "tripDuration" : timeTrip[ 1 ] - timeTrip[ 0 ],
+        "timeTripStartText" : timeTripText[ 0 ],
+        "timeTripStartSlider" : timeTripSlider[ 0 ],
+        "timeTripEndText" : timeTripText[ 1 ],
+        "timeTripEndSlider" : timeTripSlider[ 1 ],
+        "tripDuration" : timeTripSlider[ 1 ] - timeTripSlider[ 0 ],
         "armyName" : armyName,
         "armyId" : armyId,
         "armyColor" : armyColor,
@@ -137,7 +139,65 @@ def getDay( moment ):
     return 15, moment
 
 
-def analyseKnownTimeTrip( timeTrip ):
+
+def analyseMomentTimeDate( moment ):
+
+  monthNameList = [  "","Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ]
+
+
+  moment = moment.rstrip()
+
+  #case 1 : 01/01/2001
+  if len( moment.split('/') ) == 3 :
+
+    momentSplit = moment.split('/')
+
+    return "%s %s %s" % ( int( momentSplit[ 0 ] ),
+                           monthNameList[ int( momentSplit[1] ) ],
+                           int( momentSplit[ 2 ] ) )
+
+  #case 2 : 01/2000
+  elif len( moment ) == 7:
+    momentSplit = moment.split('/')
+
+    return "%s %s" % ( monthNameList[ int( momentSplit[ 0 ] ) ],
+                       int( momentSplit[ 1 ] ) )
+  
+  #case 3 : Debut 01/2000  
+  elif len( moment.split(' ') ) == 2:
+    [ dayWord, momentWoDay ] = moment.split(' ')
+    return dayWord + analyseMomentTimeDate( momentWoDay ) #call to case 2
+    
+  else:
+
+    raise ValueError("Cannot parse '%s'." % moment )
+
+
+def analyseTextTimeData( timeTrip ):
+
+  approximativeDates = False
+  
+  if "Entre " in timeTrip:
+    approximativeDates = True
+    timeTrip = timeTrip.replace('Entre ','')
+
+  timeTripMoment = timeTrip.split( ' - ' )
+  timeTripText = []
+
+  for moment in timeTripMoment:
+    timeTripText.append( analyseMomentTimeDate( moment ) )
+
+
+  returnString = ' - '.join( timeTripText )
+
+  if approximativeDates:
+    return "Entre " + returnString
+  else:
+    return returnString
+
+
+def analyseSliderTimeData( timeTrip ):
 
   timeTripMoment = timeTrip.split( ' - ' )
 
@@ -149,24 +209,6 @@ def analyseKnownTimeTrip( timeTrip ):
                                  int( day ) )
 
   return timeTripMoment 
-
-def analyseTimeData( armyData, armyId, tripNum ):
-
-  timeTrip = armyData[ armyId ][ "trajets" ][ "annees" ][ tripNum ] 
-
-  if ( 'Entre' in timeTrip or 
-        'Hiver' in timeTrip ):
-
-    return analyseKnownTimeTrip( 
-              armyData[ armyId ][ "trajets" ][ "anneesDecidees" ][ tripNum ] )
-
-  elif ' - ' in timeTrip:
-
-    return analyseKnownTimeTrip( timeTrip )
-
-  else:
-
-    raise ValueError('%s must contain eiter " - " or "Entre".' % timeTrip )
 
 
 
@@ -200,11 +242,12 @@ def writeTripJson( jsonDirectory ):
 
       # print( cityNameTripStart, cityNameTripEnd )
 
-      print(armyId)
+      # print(armyId)
       latLongTripStart = getLatLongForCity( spotsData, cityNameTripStart )
       latLongTripEnd = getLatLongForCity( spotsData, cityNameTripEnd )
 
-      timeTrip  = analyseTimeData( armyData, armyId, tripNum )
+      timeTripText  = analyseTextTimeData( armyData[ armyId ][ "trajets" ][ "annees" ][ tripNum ] ) 
+      timeTripSlider  = analyseSliderTimeData( armyData[ armyId ][ "trajets" ][ "anneesInterpollees" ][ tripNum ] ) 
 
       armyPopulation = armyData[ armyId ][ "trajets" ][ "nombre" ][ tripNum ]
       tripDescription = armyData[ armyId ][ "trajets" ][ "description" ][ tripNum ]
@@ -215,7 +258,7 @@ def writeTripJson( jsonDirectory ):
 
       listAllTrips.append( addTrip( cityNameTripStart, cityNameTripEnd, 
                                latLongTripStart, latLongTripEnd,
-                               timeTrip,
+                               timeTripText, timeTripSlider,
                                armyId, armyName,
                                armyColor,
                                armyPopulation,
