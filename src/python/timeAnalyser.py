@@ -56,7 +56,8 @@ def analyseMomentTimeDate( moment ):
   #case 3 : Debut 01/2000  
   elif len( moment.split(' ') ) == 2:
     [ dayWord, momentWoDay ] = moment.split(' ')
-    return dayWord + analyseMomentTimeDate( momentWoDay ) #call to case 2
+    return "%s %s" % ( dayWord,
+                       analyseMomentTimeDate( momentWoDay ) ) #call to case 2
     
   else:
 
