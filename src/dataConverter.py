@@ -94,7 +94,8 @@ def addTrip( cityNameTripStart, cityNameTripEnd,
         "armyPopulation" : armyPopulation,
         "tripDescription" : tripDescription,
         "stopCategory" : stopCategory,
-        "stopAngle" : stopAngle
+        "stopAngle" : stopAngle,
+        "offset" : 0
     }
 
   return trip
@@ -187,6 +188,7 @@ def accountForIdenticalTrips( jsonDirectory ):
       and 
       tripOfReference["cityNameTripEnd"] == comparisonTrip["cityNameTripEnd"] ):
 
+        comparisonTrip[ 'offset' ] = tripOfReference[ 'offset' ] + 1 
         print( ' ')
         print( tripOfReference, comparisonTrip ) 
 
@@ -242,10 +244,10 @@ if __name__ == "__main__" :
   if not os.path.isdir( jsonDirectory ):
     os.mkdir( jsonDirectory )
 
-  # translateExcel( rootDataDirectory, jsonDirectory, "armees" )
-  # translateExcel( rootDataDirectory, jsonDirectory, "endroits" )
+  translateExcel( rootDataDirectory, jsonDirectory, "armees" )
+  translateExcel( rootDataDirectory, jsonDirectory, "endroits" )
 
-  # makeArmyIcons( jsonDirectory )
+  makeArmyIcons( jsonDirectory )
 
-  # writeTripJson( jsonDirectory )
+  writeTripJson( jsonDirectory )
   accountForIdenticalTrips( jsonDirectory )
