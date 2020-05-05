@@ -176,8 +176,22 @@ def accountForIdenticalTrips( jsonDirectory ):
   with open( pathToTripJson, 'r') as j:
     tripData = json.load( j )
 
-  print( tripData )
+  print( tripData[0] )
 
+  for indexTripOfReference, tripOfReference in enumerate( tripData ):
+
+    for comparisonTrip in tripData[ (indexTripOfReference + 1): ]:
+
+      if (
+      tripOfReference["cityNameTripStart"] == comparisonTrip["cityNameTripStart"] 
+      and 
+      tripOfReference["cityNameTripEnd"] == comparisonTrip["cityNameTripEnd"] ):
+
+        print( ' ')
+        print( tripOfReference, comparisonTrip ) 
+
+
+# attention a l'ordre de modification
 
 def makeArmyIcons(  jsonDirectory ):
 
