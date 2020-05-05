@@ -168,6 +168,17 @@ def writeTripJson( jsonDirectory ):
 
   print( "Wrote json/trip.json")
 
+
+def accountForIdenticalTrips( jsonDirectory ):
+
+  pathToTripJson = os.path.join( jsonDirectory, "trips.json")
+
+  with open( pathToTripJson, 'r') as j:
+    tripData = json.load( j )
+
+  print( tripData )
+
+
 def makeArmyIcons(  jsonDirectory ):
 
   print( "Making icons")
@@ -217,9 +228,10 @@ if __name__ == "__main__" :
   if not os.path.isdir( jsonDirectory ):
     os.mkdir( jsonDirectory )
 
-  translateExcel( rootDataDirectory, jsonDirectory, "armees" )
-  translateExcel( rootDataDirectory, jsonDirectory, "endroits" )
+  # translateExcel( rootDataDirectory, jsonDirectory, "armees" )
+  # translateExcel( rootDataDirectory, jsonDirectory, "endroits" )
 
-  makeArmyIcons( jsonDirectory )
+  # makeArmyIcons( jsonDirectory )
 
-  writeTripJson( jsonDirectory )
+  # writeTripJson( jsonDirectory )
+  accountForIdenticalTrips( jsonDirectory )
