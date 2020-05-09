@@ -76,6 +76,7 @@ function deduceMonthAndYear( timeStamp ){
   let year = Math.floor( timeStamp / 360 )
   let month = monthNames[ Math.floor(timeStamp / 30 ) % 12 ]
   let day = Math.floor( timeStamp % 30 )
+  day = day ? day : "1"
   // console.log( year, month)
   return day + " " + month + " " + year 
 }

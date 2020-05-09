@@ -53,6 +53,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                 d3.selectAll('.tripStop')
                                   .filter( e=> { return d.key == e.armyId } )
                                   .attr('visibility', currentVisibility)
+                                overlay.draw()
                               })
 
     divArmyChoiceCheckBoxEnter.append('label')
