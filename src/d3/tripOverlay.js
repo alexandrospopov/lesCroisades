@@ -14,6 +14,10 @@ var selectedTimePeriodStart = 1096 * 360
 var selectedTimePeriodEnd =  1098 * 360 ;
 var incrementAngular = 0;
 var overlay = new google.maps.OverlayView();
+
+var iconStopVisibility = true;
+var iconCityVisibility = true;
+
 function drawTripMap()
 {
 Promise.all([ d3.json( "src/json/trips.json" ),
@@ -398,6 +402,18 @@ function updateLinks( range ){
 function updateCities( range ){
   // console.log(range)
 }
+
+d3.select("#cb_stop").on("click", function() {
+  let currentVisibility = this.checked ? "visible" : "hidden";
+  d3.selectAll('.tripStop').attr('visibilityGlobal',currentVisibility)
+  overlay.draw()
+
+ });
+ d3.select("#cb_cities").on("click", function() {
+  let currentVisibility = this.checked ? "visible" : "hidden";
+  d3.selectAll('.marker').attr('visibility',currentVisibility)
+  // overlay.draw()
+ });
 
 
 drawTripMap( selectedTimePeriodStart, selectedTimePeriodEnd )
