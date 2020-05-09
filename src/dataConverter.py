@@ -123,7 +123,9 @@ def writeTripJson( jsonDirectory ):
       tripDuration = timeTripSlider[ 1 ] - timeTripSlider[ 0 ]
       if tripDuration == 0:
         tripDuration = 1
-        
+      elif tripDuration < 0:
+        raise ValueError( "%s - %s - %s 's trip duration is negative" % (armyId, tripNum, tripDescription) )
+
       stopAngle += 1 
 
       listAllTrips.append(  {
@@ -169,6 +171,14 @@ def accountForIdenticalTrips( jsonDirectory ):
       tripOfReference["cityNameTripEnd"] == comparisonTrip["cityNameTripEnd"] ):
 
         comparisonTrip[ 'offset' ] = tripOfReference[ 'offset' ] + 1 
+
+      elif(
+      tripOfReference["cityNameTripStart"] == comparisonTrip["cityNameTripEnd"] 
+      and 
+      tripOfReference["cityNameTripEnd"] == comparisonTrip["cityNameTripStart"] ):
+
+        comparisonTrip[ 'offset' ] = tripOfReference[ 'offset' ] + 1 
+
 
   with open( pathToTripJson, "w") as j:
     json.dump( tripData, j) 

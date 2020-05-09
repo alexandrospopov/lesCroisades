@@ -346,6 +346,7 @@ function printTripInformations( trip ){
   var span = document.getElementsByClassName("close")[0];
   var modalParagraph = document.getElementById("modalParagraph")
 
+  console.log(trip)
   modalTitle.textContent = trip.armyName + " : De " + trip.cityNameTripStart + " vers " + trip.cityNameTripEnd; 
   modalDates.textContent = trip.timeTripText;
   modalParagraph.textContent = trip.tripDescription ;
