@@ -123,19 +123,24 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                       .attr('class','link-circle-end')
 
         linkGroup.select('.link-line')
-                 .each( drawlink )
-                 .style('stroke', trip => { return trip.armyColor } )
+                 .attr('x1', trip => trip.x1 + 'px')
+                 .attr('y1', trip => trip.y1 + 'px')
+                 .attr('x2', trip => trip.x2 + 'px') 
+                 .attr('y2', trip => trip.y2 + 'px')
+                 .style('stroke', trip =>  trip.armyColor )
                  .style('stroke-width', '6px' ) 
 
         linkGroup.select('.link-circle-start')
-                 .each( drawlinkCircleStart )
                  .attr( 'r', "3" )
-                 .style('fill', trip => { return trip.armyColor } )
+                 .attr('cx', trip => trip.x1 )
+                 .attr('cy', trip => trip.y1 )
+                 .style('fill', trip => trip.armyColor )
 
         linkGroup.select('.link-circle-end')
-                 .each( drawlinkCircleEnd )
                  .attr( 'r', "3" )
-                 .style('fill', trip => {return trip.armyColor } )
+                 .attr('cx', trip => trip.x2 )
+                 .attr('cy', trip => trip.y2 )
+                 .style('fill', trip => trip.armyColor )
 
         linkGroup.exit().remove()
 
@@ -198,72 +203,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             trip["y1"] = q1[1];
             trip["x2"] = q2[0]; 
             trip["y2"] = q2[1];  
-          }
-
-          function drawlinkCircleStart( trip ){
-            // let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
-            //                                  trip.latLongTripStart[1] )
-            // let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
-            //                                  trip.latLongTripEnd[1] )
-            // p1 = projection.fromLatLngToDivPixel( p1 );
-            // p2 = projection.fromLatLngToDivPixel( p2 );
-            // p1 = ajustForBounds( p1 )
-            // p2 = ajustForBounds( p2 )
-
-            // var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
-            // q1 = coordinates[ 0 ]
-            // q2 = coordinates[ 1 ]
-
-            return d3.select(this)
-              .attr('cx', trip.x1 )
-              .attr('cy', trip.y1 );  
-          }
-
-          function drawlinkCircleEnd( trip ){
-            // let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
-            //                                  trip.latLongTripStart[1] )
-            // let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
-            //                                  trip.latLongTripEnd[1] )
-            // p1 = projection.fromLatLngToDivPixel( p1 );
-            // p2 = projection.fromLatLngToDivPixel( p2 );
-            // p1 = ajustForBounds( p1 )
-            // p2 = ajustForBounds( p2 )
-
-            // var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
-            // q1 = coordinates[ 0 ]
-            // q2 = coordinates[ 1 ]
-
-
-            return d3.select(this)
-              .attr('cx', trip.x2 )
-              .attr('cy', trip.y2 );  
-          }
-
-
-          function drawlink( trip ) {
-            // let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
-            //                                  trip.latLongTripStart[1] )
-            // let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
-            //                                  trip.latLongTripEnd[1] )
-            // p1 = projection.fromLatLngToDivPixel( p1 );
-            // p2 = projection.fromLatLngToDivPixel( p2 );
-            // p1 = ajustForBounds( p1 )
-            // p2 = ajustForBounds( p2 )
-
-
-            // var coordinates = adjustForDuplicates( trip, p1, p2 )
-            // p1 = coordinates[ 0 ]
-            // p2 = coordinates[ 1 ]
-              
-            // coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
-            // q1 = coordinates[ 0 ]
-            // q2 = coordinates[ 1 ]
-
-            d3.select(this)
-              .attr('x1', trip.x1 + 'px')
-              .attr('y1', trip.y1 + 'px')
-              .attr('x2', trip.x2 + 'px') 
-              .attr('y2', trip.y2 + 'px');  
           }
 
 
