@@ -104,6 +104,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         var linkGroup = layer.selectAll(".link")
                              .data( selectedTripList )   
+                             .each( setStartEndCoordinates )
 
         var linkGroupEnter = linkGroup.enter()
                                       .append('g')
@@ -171,47 +172,10 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .on( "mouseover" , d => visibleCityTooltip( d , tooltip, tripList ) )
                .on( "mouseout" , d => hideToolTip());
 
-          function drawlinkCircleStart( trip ){
-            let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
-                                             trip.latLongTripStart[1] )
-            let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
-                                             trip.latLongTripEnd[1] )
-            p1 = projection.fromLatLngToDivPixel( p1 );
-            p2 = projection.fromLatLngToDivPixel( p2 );
-            p1 = ajustForBounds( p1 )
-            p2 = ajustForBounds( p2 )
-
-            var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
-            q1 = coordinates[ 0 ]
-            q2 = coordinates[ 1 ]
-
-            return d3.select(this)
-              .attr('cx', q1[0] )
-              .attr('cy', q1[1] );  
-          }
-
-          function drawlinkCircleEnd( trip ){
-            let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
-                                             trip.latLongTripStart[1] )
-            let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
-                                             trip.latLongTripEnd[1] )
-            p1 = projection.fromLatLngToDivPixel( p1 );
-            p2 = projection.fromLatLngToDivPixel( p2 );
-            p1 = ajustForBounds( p1 )
-            p2 = ajustForBounds( p2 )
-
-            var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
-            q1 = coordinates[ 0 ]
-            q2 = coordinates[ 1 ]
 
 
-            d3.select(this)
-              .attr('cx', q2[0] )
-              .attr('cy', q2[1] );  
-          }
+          function setStartEndCoordinates( trip ){
 
-
-          function drawlink( trip ) {
             let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
                                              trip.latLongTripStart[1] )
             let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
@@ -230,11 +194,76 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             q1 = coordinates[ 0 ]
             q2 = coordinates[ 1 ]
 
+            trip["x1"] = q1[0];
+            trip["y1"] = q1[1];
+            trip["x2"] = q2[0]; 
+            trip["y2"] = q2[1];  
+          }
+
+          function drawlinkCircleStart( trip ){
+            // let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
+            //                                  trip.latLongTripStart[1] )
+            // let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
+            //                                  trip.latLongTripEnd[1] )
+            // p1 = projection.fromLatLngToDivPixel( p1 );
+            // p2 = projection.fromLatLngToDivPixel( p2 );
+            // p1 = ajustForBounds( p1 )
+            // p2 = ajustForBounds( p2 )
+
+            // var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
+            // q1 = coordinates[ 0 ]
+            // q2 = coordinates[ 1 ]
+
+            return d3.select(this)
+              .attr('cx', trip.x1 )
+              .attr('cy', trip.y1 );  
+          }
+
+          function drawlinkCircleEnd( trip ){
+            // let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
+            //                                  trip.latLongTripStart[1] )
+            // let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
+            //                                  trip.latLongTripEnd[1] )
+            // p1 = projection.fromLatLngToDivPixel( p1 );
+            // p2 = projection.fromLatLngToDivPixel( p2 );
+            // p1 = ajustForBounds( p1 )
+            // p2 = ajustForBounds( p2 )
+
+            // var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
+            // q1 = coordinates[ 0 ]
+            // q2 = coordinates[ 1 ]
+
+
+            return d3.select(this)
+              .attr('cx', trip.x2 )
+              .attr('cy', trip.y2 );  
+          }
+
+
+          function drawlink( trip ) {
+            // let p1 = new google.maps.LatLng( trip.latLongTripStart[0], 
+            //                                  trip.latLongTripStart[1] )
+            // let p2 = new google.maps.LatLng( trip.latLongTripEnd[0], 
+            //                                  trip.latLongTripEnd[1] )
+            // p1 = projection.fromLatLngToDivPixel( p1 );
+            // p2 = projection.fromLatLngToDivPixel( p2 );
+            // p1 = ajustForBounds( p1 )
+            // p2 = ajustForBounds( p2 )
+
+
+            // var coordinates = adjustForDuplicates( trip, p1, p2 )
+            // p1 = coordinates[ 0 ]
+            // p2 = coordinates[ 1 ]
+              
+            // coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
+            // q1 = coordinates[ 0 ]
+            // q2 = coordinates[ 1 ]
+
             d3.select(this)
-              .attr('x1', q1[0] + 'px')
-              .attr('y1', q1[1] + 'px')
-              .attr('x2', q2[0] + 'px') 
-              .attr('y2', q2[1] + 'px');  
+              .attr('x1', trip.x1 + 'px')
+              .attr('y1', trip.y1 + 'px')
+              .attr('x2', trip.x2 + 'px') 
+              .attr('y2', trip.y2 + 'px');  
           }
 
 
@@ -294,14 +323,11 @@ function adjustForDuplicates( trip, p1, p2 ){
     let normVectorOrthogonal = Math.sqrt( vectorOrthogonal[ 0 ] * vectorOrthogonal[ 0 ] + vectorOrthogonal[ 1 ] * vectorOrthogonal[ 1 ] );  
     vectorOrthogonal[ 0 ] = vectorOrthogonal[ 0 ] / normVectorOrthogonal
     vectorOrthogonal[ 1 ] = vectorOrthogonal[ 1 ] / normVectorOrthogonal
-    console.log(p1,p2)
-    console.log( vectorOrthogonal)
     p1.x = p1.x + vectorOrthogonal[ 0 ] * 6 
     p1.y = p1.y + vectorOrthogonal[ 1 ] * 6 
 
     p2.x = p2.x + vectorOrthogonal[ 0 ] * 6 
     p2.y = p2.y + vectorOrthogonal[ 1 ] * 6
-    console.log(p1,p2)
 
     return [ p1, p2 ]
 
