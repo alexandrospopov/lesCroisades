@@ -177,8 +177,6 @@ def accountForIdenticalTrips( jsonDirectory ):
   with open( pathToTripJson, 'r') as j:
     tripData = json.load( j )
 
-  print( tripData[0] )
-
   for indexTripOfReference, tripOfReference in enumerate( tripData ):
 
     for comparisonTrip in tripData[ (indexTripOfReference + 1): ]:
@@ -189,9 +187,11 @@ def accountForIdenticalTrips( jsonDirectory ):
       tripOfReference["cityNameTripEnd"] == comparisonTrip["cityNameTripEnd"] ):
 
         comparisonTrip[ 'offset' ] = tripOfReference[ 'offset' ] + 1 
-        print( ' ')
-        print( tripOfReference, comparisonTrip ) 
 
+  with open( pathToTripJson, "w") as j:
+    json.dump( tripData, j) 
+
+  print( "Rewrote json/trip.json accounting for duplicates.")
 
 # attention a l'ordre de modification
 
