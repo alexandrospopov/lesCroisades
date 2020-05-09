@@ -193,7 +193,6 @@ def accountForIdenticalTrips( jsonDirectory ):
 
   print( "Rewrote json/trip.json accounting for duplicates.")
 
-# attention a l'ordre de modification
 
 def makeArmyIcons(  jsonDirectory ):
 
