@@ -291,8 +291,8 @@ function adjustForSelectedPeriod( trip, p1, p2 ){
   let tripPeriodStart = selectedTimePeriodStart;
   let tripPeriodEnd = selectedTimePeriodEnd;
 
-  if ( tripPeriodEnd > trip.timeTripEnd ){ tripPeriodEnd = trip.timeTripEnd }
-  if ( tripPeriodStart < trip.timeTripStart ){ tripPeriodStart = trip.timeTripStart }
+  if ( tripPeriodEnd >= trip.timeTripEnd ){ tripPeriodEnd = trip.timeTripEnd }
+  if ( tripPeriodStart <= trip.timeTripStart ){ tripPeriodStart = trip.timeTripStart }
 
   const q2 = [ 
   p1.x + vectorDirect[0] * ( tripPeriodEnd - trip.timeTripStart ) / trip.tripDuration,
@@ -303,7 +303,6 @@ function adjustForSelectedPeriod( trip, p1, p2 ){
   p2.x + vectorIndirect[0] * ( trip.timeTripEnd - tripPeriodStart ) / trip.tripDuration,
   p2.y + vectorIndirect[1] * ( trip.timeTripEnd - tripPeriodStart ) / trip.tripDuration 
 ]
-
   return [ q1, q2 ]
 }
 

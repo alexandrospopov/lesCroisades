@@ -69,37 +69,6 @@ def getLatLongForCity( cityData, cityName ):
     cityData[ cityName ][ "Geographie" ][ "Longitude" ]
   ]
 
-def addTrip( cityNameTripStart, cityNameTripEnd, 
-             latLongTripStart, latLongTripEnd,
-             timeTripText, timeTripSlider,
-             armyId, armyName,
-             armyColor,
-             armyPopulation,
-             tripDescription,
-             stopCategory,
-             stopAngle  ):
-
-  trip = {
-        "latLongTripStart": latLongTripStart,
-        "latLongTripEnd": latLongTripEnd,
-        "cityNameTripStart" : cityNameTripStart,
-        "cityNameTripEnd" : cityNameTripEnd,
-        "timeTripText" : timeTripText,
-        "timeTripStart" : timeTripSlider[ 0 ],
-        "timeTripEnd" : timeTripSlider[ 1 ],
-        "tripDuration" : timeTripSlider[ 1 ] - timeTripSlider[ 0 ],
-        "armyName" : armyName,
-        "armyId" : armyId,
-        "armyColor" : armyColor,
-        "armyPopulation" : armyPopulation,
-        "tripDescription" : tripDescription,
-        "stopCategory" : stopCategory,
-        "stopAngle" : stopAngle,
-        "offset" : 0
-    }
-
-  return trip
-
 def getCityNum( listAllCities, cityToFind ):
 
   for numCity, city in enumerate( listAllCities ):
@@ -151,17 +120,30 @@ def writeTripJson( jsonDirectory ):
 
       stopCategory = armyData[ armyId ][ "trajets" ][ "etat" ][ tripNum ]
 
+      tripDuration = timeTripSlider[ 1 ] - timeTripSlider[ 0 ]
+      if tripDuration == 0:
+        tripDuration = 1
+        
       stopAngle += 1 
 
-      listAllTrips.append( addTrip( cityNameTripStart, cityNameTripEnd, 
-                               latLongTripStart, latLongTripEnd,
-                               timeTripText, timeTripSlider,
-                               armyId, armyName,
-                               armyColor,
-                               armyPopulation,
-                               tripDescription,
-                               stopCategory, 
-                               stopAngle ) )
+      listAllTrips.append(  {
+        "latLongTripStart": latLongTripStart,
+        "latLongTripEnd": latLongTripEnd,
+        "cityNameTripStart" : cityNameTripStart,
+        "cityNameTripEnd" : cityNameTripEnd,
+        "timeTripText" : timeTripText,
+        "timeTripStart" : timeTripSlider[ 0 ],
+        "timeTripEnd" : timeTripSlider[ 1 ],
+        "tripDuration" : tripDuration,
+        "armyName" : armyName,
+        "armyId" : armyId,
+        "armyColor" : armyColor,
+        "armyPopulation" : armyPopulation,
+        "tripDescription" : tripDescription,
+        "stopCategory" : stopCategory,
+        "stopAngle" : stopAngle,
+        "offset" : 0
+    } )
 
 
   with open( pathToTripJson, "w") as j:
