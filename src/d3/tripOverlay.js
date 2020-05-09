@@ -56,7 +56,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                   .attr('visibility', currentVisibility)
                                 d3.selectAll('.tripStop')
                                   .filter( e=> { return d.key == e.armyId } )
-                                  .attr('visibility', currentVisibility)
+                                  .attr('army-visibility', currentVisibility)
+                                  .each( setStopIconVisibility )
                                 overlay.draw()
                               })
 
@@ -161,6 +162,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                               .attr('width', sizeLogo)
                                               .attr('height', sizeLogo)
                                               .attr( 'class', 'tripStop' )
+                                              .attr('army-visibility' , "visible")
+                                              .attr('global-visibility' , "visible")
                                               .attr('visibility', trip => armyList[ trip.armyId ].admin.visibility )
                                               .on("mouseover", trip => visibleTripTooltip(trip ))
                                               .on("click", trip => { printTripInformations( trip ) } )
@@ -403,10 +406,26 @@ function updateCities( range ){
   // console.log(range)
 }
 
+function setStopIconVisibility( d ){
+  let armyVisibility = d3.select(this).attr('army-visibility')
+  let globalVisibility = d3.select(this).attr('global-visibility')
+
+  if ( armyVisibility == "visible" && globalVisibility == "visible" ) 
+  {
+    d3.select(this).attr('visibility','visible')
+  }
+  else
+  {
+    d3.select(this).attr('visibility','hidden')
+  }
+}
+
+
 d3.select("#cb_stop").on("click", function() {
   let currentVisibility = this.checked ? "visible" : "hidden";
-  d3.selectAll('.tripStop').attr('visibilityGlobal',currentVisibility)
-  overlay.draw()
+  d3.selectAll('.tripStop')
+    .attr('global-visibility',currentVisibility )
+    .each( setStopIconVisibility )
 
  });
  d3.select("#cb_cities").on("click", function() {
