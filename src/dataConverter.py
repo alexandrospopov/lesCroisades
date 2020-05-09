@@ -126,7 +126,7 @@ def writeTripJson( jsonDirectory ):
       elif tripDuration < 0:
         raise ValueError( "%s - %s - %s 's trip duration is negative" % (armyId, tripNum, tripDescription) )
 
-      stopAngle += 1 
+      stopAngle += 5 
 
       listAllTrips.append(  {
         "latLongTripStart": latLongTripStart,
