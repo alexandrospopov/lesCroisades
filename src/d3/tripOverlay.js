@@ -10,11 +10,11 @@ minimalRadius = 10
 sizeLogo = 40
 var sw = 0;
 var ne = 0;
-var selectedTimePeriodStart = 12000
-var selectedTimePeriodEnd =  12015;
+var selectedTimePeriodStart = 1096 * 360 
+var selectedTimePeriodEnd =  1098 * 360 ;
 var incrementAngular = 0;
 var overlay = new google.maps.OverlayView();
-function drawTripMap(  )
+function drawTripMap()
 {
 Promise.all([ d3.json( "src/json/trips.json" ),
               d3.json( "src/json/armees.json" ),
@@ -46,6 +46,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                               .attr('checked', "checked" )
                               .on('click', function( d ){
                                 let currentVisibility = this.checked ? "visible" : "hidden";
+                                d['value']['admin']['visibility'] = currentVisibility
                                 d3.selectAll( '.link')
                                   .filter( e=> { return d.key == e.armyId } )
                                   .attr('visibility', currentVisibility)
@@ -127,6 +128,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                  .attr('y1', trip => trip.y1 + 'px')
                  .attr('x2', trip => trip.x2 + 'px') 
                  .attr('y2', trip => trip.y2 + 'px')
+                 .attr('visibility', trip => armyList[ trip.armyId ].admin.visibility )
                  .style('stroke', trip =>  trip.armyColor )
                  .style('stroke-width', '6px' ) 
 
@@ -134,12 +136,14 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                  .attr( 'r', "3" )
                  .attr('cx', trip => trip.x1 )
                  .attr('cy', trip => trip.y1 )
+                 .attr('visibility', trip => armyList[ trip.armyId ].admin.visibility )
                  .style('fill', trip => trip.armyColor )
 
         linkGroup.select('.link-circle-end')
                  .attr( 'r', "3" )
                  .attr('cx', trip => trip.x2 )
                  .attr('cy', trip => trip.y2 )
+                 .attr('visibility', trip => armyList[ trip.armyId ].admin.visibility )
                  .style('fill', trip => trip.armyColor )
 
         linkGroup.exit().remove()
@@ -152,6 +156,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                               .attr('width', sizeLogo)
                                               .attr('height', sizeLogo)
                                               .attr( 'class', 'tripStop' )
+                                              .attr('visibility', trip => armyList[ trip.armyId ].admin.visibility )
                                               .each( drawTripStopMarker )
                                               .on("mouseover", trip => visibleTripTooltip(trip ))
                                               .on("click", trip => { printTripInformations( trip ) } )
