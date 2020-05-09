@@ -221,7 +221,12 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             p1 = ajustForBounds( p1 )
             p2 = ajustForBounds( p2 )
 
-            var coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
+
+            var coordinates = adjustForDuplicates( trip, p1, p2 )
+            p1 = coordinates[ 0 ]
+            p2 = coordinates[ 1 ]
+              
+            coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
             q1 = coordinates[ 0 ]
             q2 = coordinates[ 1 ]
 
@@ -279,6 +284,31 @@ function ajustForBounds( d ){
   d.x -= sw.x
   d.y -= ne.y
   return d 
+}
+
+function adjustForDuplicates( trip, p1, p2 ){
+  if (trip.offset > 0){
+    let vectorDirect = [ p2.x - p1.x, 
+                         p2.y - p1.y] 
+    let vectorOrthogonal = [ vectorDirect[ 1 ], - vectorDirect[ 0 ] ];
+    let normVectorOrthogonal = Math.sqrt( vectorOrthogonal[ 0 ] * vectorOrthogonal[ 0 ] + vectorOrthogonal[ 1 ] * vectorOrthogonal[ 1 ] );  
+    vectorOrthogonal[ 0 ] = vectorOrthogonal[ 0 ] / normVectorOrthogonal
+    vectorOrthogonal[ 1 ] = vectorOrthogonal[ 1 ] / normVectorOrthogonal
+    console.log(p1,p2)
+    console.log( vectorOrthogonal)
+    p1.x = p1.x + vectorOrthogonal[ 0 ] * 6 
+    p1.y = p1.y + vectorOrthogonal[ 1 ] * 6 
+
+    p2.x = p2.x + vectorOrthogonal[ 0 ] * 6 
+    p2.y = p2.y + vectorOrthogonal[ 1 ] * 6
+    console.log(p1,p2)
+
+    return [ p1, p2 ]
+
+  }
+  else{
+    return [ p1, p2 ]
+  }
 }
 
 function ajustForSelectedPeriod( trip, p1, p2 ){
