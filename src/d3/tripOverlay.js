@@ -158,7 +158,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                               .attr('height', sizeLogo)
                                               .attr( 'class', 'tripStop' )
                                               .attr('visibility', trip => armyList[ trip.armyId ].admin.visibility )
-                                              .each( drawTripStopMarker )
                                               .on("mouseover", trip => visibleTripTooltip(trip ))
                                               .on("click", trip => { printTripInformations( trip ) } )
                                               .on("mouseout", () => hideToolTip());
@@ -166,6 +165,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         tripStops.each( drawTripStopMarker )
                  .attr( 'xlink:href', d => 'img/trips/' + d.armyId + '-' + d.stopCategory +'.svg')
+                 .each( drawTripStopMarker )
 
         tripStops.exit().remove()
 
