@@ -95,7 +95,7 @@ def analyseSliderTimeData( timeTrip ):
     day, momentWoDay = getDay( moment )
     [ month, year ] = momentWoDay.split('/')
     timeTripMoment[ index ] =  ( int( year ) * 12 * 30 + 
-                                 int( month ) * 30 + 
+                                 ( int( month ) - 1 )  * 30 + 
                                  int( day ) )
 
   return timeTripMoment 
