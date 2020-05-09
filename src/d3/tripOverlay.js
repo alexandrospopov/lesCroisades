@@ -200,7 +200,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
             p1 = coordinates[ 0 ]
             p2 = coordinates[ 1 ]
               
-            coordinates  = ajustForSelectedPeriod( trip, p1, p2 )
+            coordinates  = adjustForSelectedPeriod( trip, p1, p2 )
             q1 = coordinates[ 0 ]
             q2 = coordinates[ 1 ]
 
@@ -281,7 +281,7 @@ function adjustForDuplicates( trip, p1, p2 ){
   }
 }
 
-function ajustForSelectedPeriod( trip, p1, p2 ){
+function adjustForSelectedPeriod( trip, p1, p2 ){
 
   let vectorDirect = [ p2.x - p1.x, 
                        p2.y - p1.y] 
