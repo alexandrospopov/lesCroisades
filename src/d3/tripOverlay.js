@@ -254,6 +254,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
   
   overlay.setMap(map);
 
+updateTimePrint( [ 1096*360, 1098*360 ] )
+setSlider( 1096*360, 1098*360 )
+
 })
 }
 
@@ -336,25 +339,7 @@ function setNorthEast( projection,  bounds, padding){
   return ne;
 }
 
-function deduceMonthAndYear( timeStamp ){
-  let monthNames = [
-    "Janvier",
-    "Février",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juillet",
-    "Août",
-    "Septembre",
-    "Octobre",
-    "Novembre",
-    "Décembre"
-  ]
-  let year = Math.floor( timeStamp / 12 )
-  let month = monthNames[ timeStamp % 12  ]
-  return month + " " + year
-}
+
 
 function printTripInformations( trip ){
 

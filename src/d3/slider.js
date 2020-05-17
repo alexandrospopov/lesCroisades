@@ -52,11 +52,11 @@ function setSlider( timeStampStart, timeStampEnd ){
   brush.move(brushg, [ timeStampStart, timeStampEnd ].map(x));
 }
 
-let dateStart = 1096 * 360 
-let dateEnd = 1098 * 360 
+// let dateStart = 1096 * 360 
+// let dateEnd = 1098 * 360 
 
-updateTimePrint( [ dateStart, dateEnd ] )
-setSlider( dateStart, dateEnd )
+// updateTimePrint( [ dateStart, dateEnd ] )
+// setSlider( dateStart, dateEnd )
 
 function deduceMonthAndYear( timeStamp ){
   let monthNames = [
@@ -74,7 +74,7 @@ function deduceMonthAndYear( timeStamp ){
     "Décembre"
   ]
   let year = Math.floor( timeStamp / 360 )
-  let month = monthNames[ Math.floor(timeStamp / 30 ) % 12 ]
+  let month = monthNames[ Math.floor(timeStamp / 360 ) % 12 ]
   let day = Math.floor( timeStamp % 30 )
   day = day ? day : "1"
   // console.log( year, month)
