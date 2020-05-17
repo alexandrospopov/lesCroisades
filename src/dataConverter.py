@@ -233,6 +233,8 @@ def rewriteMapJson( jsonDirectory ):
     mapJson = json.load( j )
 
   for mapName in mapJson:
+
+    mapJson[mapName]['admin']['dates'] = analyseSliderTimeData( mapJson[mapName]['admin']['dates'] )
     for category in [ 'idArmees', 'idEndroits' ]:
 
       l = mapJson[ mapName ][ category ][ category ]

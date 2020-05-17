@@ -254,8 +254,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
   
   overlay.setMap(map);
 
-updateTimePrint( [ 1096*360, 1098*360 ] )
-setSlider( 1096*360, 1098*360 )
+// updateTimePrint( [ 1096*360, 1098*360 ] )
+// setSlider( 1096*360, 1098*360 )
 
 })
 }
@@ -435,21 +435,25 @@ d3.select("#cb_stop").on("click", function() {
  
  d3.select( "#onglet-croisades-populaires" ).on( 'click' , function(){
   drawTripMap( "croisadesPopulaires" )
+  setSlider( "croisadesPopulaires" )
   overlay.draw()
 
  })
 
  d3.select( "#onglet-deuxieme-croisade" ).on( "click", function(){
    drawTripMap('deuxiemeCroisade')
+   setSlider('deuxiemeCroisade')
    overlay.draw()
  })
  
 
  d3.select( "#onglet-sac-constantinople" ).on( "click", function(){
   drawTripMap('sacConstantinople')
+  setSlider('sacConstantinople')
   overlay.draw()
 
 })
 
 
 drawTripMap( "croisadesPopulaires" )
+setSlider( "croisadesPopulaires" )
