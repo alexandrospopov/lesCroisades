@@ -433,6 +433,19 @@ d3.select("#cb_stop").on("click", function() {
   d3.selectAll('.marker').attr('visibility',currentVisibility)
   // overlay.draw()
  });
+ 
+ d3.select( "#onglet-croisades-populaires" ).on( 'click' , function(){
+  drawTripMap( "croisadesPopulaires" )
+ })
+
+ d3.select( "#onglet-deuxieme-croisade" ).on( "click", function(){
+   drawTripMap('deuxiemeCroisade')
+ })
+ 
+
+ d3.select( "#onglet-sac-constantinople" ).on( "click", function(){
+  drawTripMap('sacConstantinople')
+})
 
 
 drawTripMap( selectedTimePeriodStart, selectedTimePeriodEnd )
