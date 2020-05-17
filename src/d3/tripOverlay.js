@@ -42,12 +42,12 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
       // d3.selectAll('.link').remove()
       // d3.selectAll('.tripStop').remove()
-      // d3.selectAll('.marker').remove()
+      d3.selectAll('.marker').remove()
 
 
     var divArmyChoice = d3.select('#armyChoice')
 
-    var divArmyChoiceCheckBox = divArmyChoice.selectAll('.checkBoxDiv')
+    var divArmyChoiceCheckBox = divArmyChoice.selectAll(' .checkBoxDiv')
                                               .data( d3.entries(armyList) ) 
 
     var divArmyChoiceCheckBoxEnter = divArmyChoiceCheckBox.enter()
@@ -191,6 +191,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         layer.selectAll( '.marker' )
                .data( cityListToShow )
                .each( drawMarker )
+               .on( "mouseout" , d => hideToolTip())
              .enter().append('image')
                .attr( 'xlink:href', d => 'img/cities/' + d.value.Geographie.Etat +'.svg')
                .attr('width', sizeLogo)
@@ -198,7 +199,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                .attr( 'class', 'marker' )
                .each( drawMarker)
                .on( "mouseover" , d => visibleCityTooltip( d , tooltip, tripList ) )
-               .on( "mouseout" , d => hideToolTip());
+               .on( "mouseout" , d => hideToolTip())
+
 
 
 
