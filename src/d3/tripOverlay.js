@@ -17,15 +17,28 @@ var incrementAngular = 0;
 var iconStopVisibility = true;
 var iconCityVisibility = true;
 
-function drawTripMap()
+function drawTripMap( mapName )
 {
 Promise.all([ d3.json( "src/json/trips.json" ),
               d3.json( "src/json/armees.json" ),
-              d3.json( "src/json/endroits.json" ), ]).then(function( files ) 
+              d3.json( "src/json/endroits.json" ),
+              d3.json( "src/json/cartes.json" ), ]).then(function( files ) 
 {
+
     tripList = files[ 0 ]
     armyList = files[ 1 ]
     cityList = files[ 2 ]
+    mapDict = files[ 3 ]
+
+    console.log( mapDict[ mapName].idEndroits )
+    console.log( d3.entries(cityList)[0] )
+
+    tripList = tripList.filter( 
+      trip => mapDict[ mapName ].idArmees.includes(trip.armyId) ) 
+
+    cityListToShow = d3.entries(cityList).filter( 
+      city => mapDict[ mapName ].idEndroits.includes(city.key)
+    )
 
     var overlay = new google.maps.OverlayView();
 
@@ -181,7 +194,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                   
 
         layer.selectAll( '.marker' )
-               .data(d3.entries( cityList ))
+               .data(cityListToShow )
                .each( drawMarker )
              .enter().append('image')
                .attr( 'xlink:href', d => 'img/cities/' + d.value.Geographie.Etat +'.svg')
@@ -450,4 +463,4 @@ d3.select("#cb_stop").on("click", function() {
 })
 
 
-drawTripMap( selectedTimePeriodStart, selectedTimePeriodEnd )
+drawTripMap( "croisadesPopulaires" )
