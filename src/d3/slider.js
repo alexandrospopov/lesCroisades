@@ -6,7 +6,7 @@ var marginRight = 80
 var width = 700 - marginSides * 2;
 var height = 340 - marginTop;
 
-function setSlider( mapName ){
+function initializeSlider( mapName ){
 
 
   Promise.all([ d3.json( "src/json/cartes.json" ), ]).then(function( files ) 
@@ -14,7 +14,7 @@ function setSlider( mapName ){
     mapDict = files[ 0 ]
      
 
-      var x = d3.scaleLinear()
+      let x = d3.scaleLinear()
       .domain( mapDict[mapName].admin.dates)
       .range([0, width]);
   
@@ -26,7 +26,8 @@ function setSlider( mapName ){
       .attr("width", width + marginSides + marginRight)
       .attr("height", height + marginTop)
     .append("g")
-      .attr("transform", "translate(" + marginSides + "," + marginTop + ")")
+    .attr('id',"timeSliderSvg")
+    .attr("transform", "translate(" + marginSides + "," + marginTop + ")")
       .call(d3.axisBottom()
               .scale(x)
               .tickFormat( d => deduceMonthAndYear( d ) )            
@@ -57,6 +58,32 @@ function setSlider( mapName ){
   
     // brush.move(brushg, [ timeStampStart, timeStampEnd ].map(x));
     })
+
+}
+
+
+function updateSlider( mapName ){
+
+  Promise.all([ d3.json( "src/json/cartes.json" ), ]).then(function( files ) 
+  {
+    mapDict = files[ 0 ]
+
+    console.log( mapDict[mapName].admin.dates )
+     
+      let x = d3.scaleLinear()
+      .domain( mapDict[mapName].admin.dates)
+      .range([0, width]);
+  
+    d3.select("#timeSliderSvg")
+      .call(d3.axisBottom()
+              .scale(x)
+              .tickFormat( d => deduceMonthAndYear( d ) )            
+              .ticks(4));
+    
+  
+    // brush.move(brushg, [ timeStampStart, timeStampEnd ].map(x));
+    })
+
 
 }
 

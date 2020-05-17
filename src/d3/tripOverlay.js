@@ -435,25 +435,25 @@ d3.select("#cb_stop").on("click", function() {
  
  d3.select( "#onglet-croisades-populaires" ).on( 'click' , function(){
   drawTripMap( "croisadesPopulaires" )
-  setSlider( "croisadesPopulaires" )
+  updateSlider( "croisadesPopulaires" )
   overlay.draw()
 
  })
 
  d3.select( "#onglet-deuxieme-croisade" ).on( "click", function(){
    drawTripMap('deuxiemeCroisade')
-   setSlider('deuxiemeCroisade')
+   updateSlider('deuxiemeCroisade')
    overlay.draw()
  })
  
 
  d3.select( "#onglet-sac-constantinople" ).on( "click", function(){
   drawTripMap('sacConstantinople')
-  setSlider('sacConstantinople')
+  updateSlider('sacConstantinople')
   overlay.draw()
 
 })
 
 
 drawTripMap( "croisadesPopulaires" )
-setSlider( "croisadesPopulaires" )
+initializeSlider( "croisadesPopulaires" )
