@@ -17,6 +17,9 @@ var incrementAngular = 0;
 var iconStopVisibility = true;
 var iconCityVisibility = true;
 
+
+var overlay = new google.maps.OverlayView();
+
 function drawTripMap( mapName )
 {
 Promise.all([ d3.json( "src/json/trips.json" ),
@@ -30,22 +33,17 @@ Promise.all([ d3.json( "src/json/trips.json" ),
     cityList = files[ 2 ]
     mapDict = files[ 3 ]
 
-    console.log( mapDict[ mapName].idEndroits )
-    console.log( d3.entries(cityList)[0] )
-
     tripList = tripList.filter( 
       trip => mapDict[ mapName ].idArmees.includes(trip.armyId) ) 
-
+    
     cityListToShow = d3.entries(cityList).filter( 
       city => mapDict[ mapName ].idEndroits.includes(city.key)
     )
 
-    var overlay = new google.maps.OverlayView();
+      // d3.selectAll('.link').remove()
+      // d3.selectAll('.tripStop').remove()
+      // d3.selectAll('.marker').remove()
 
-
-    const armyPopulationScale = d3.scaleLinear()
-                                  .range([2,20])
-                                  .domain(  d3.extent( tripList, d => {return d.armyPopulation}) )
 
     var divArmyChoice = d3.select('#armyChoice')
 
@@ -81,10 +79,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                               .html( d=> d.value.admin.fullName )
 
 
-    bounds = setBounds( cityList )
+    bounds = setBounds( d3.entries(cityList) )
     map.fitBounds( bounds );
 
-    overlay.setMap(null);
     overlay.onAdd = function() {
 
 
@@ -191,10 +188,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         tripStops.exit().remove()
 
-                  
-
         layer.selectAll( '.marker' )
-               .data(cityListToShow )
+               .data( cityListToShow )
                .each( drawMarker )
              .enter().append('image')
                .attr( 'xlink:href', d => 'img/cities/' + d.value.Geographie.Etat +'.svg')
@@ -258,7 +253,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
         }
       };
     };
-
+  
   overlay.setMap(map);
 
 })
@@ -267,7 +262,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 function setBounds( nodes ){
   var bounds = new google.maps.LatLngBounds();
 
-  d3.entries( nodes ).forEach(function(d){
+  nodes.forEach(function(d){
 
     bounds.extend(d.value.latLong = new google.maps.LatLng( 
                                                 d.value.Geographie.Latitude, 
@@ -451,15 +446,20 @@ d3.select("#cb_stop").on("click", function() {
  
  d3.select( "#onglet-croisades-populaires" ).on( 'click' , function(){
   drawTripMap( "croisadesPopulaires" )
+  overlay.draw()
+
  })
 
  d3.select( "#onglet-deuxieme-croisade" ).on( "click", function(){
    drawTripMap('deuxiemeCroisade')
+   overlay.draw()
  })
  
 
  d3.select( "#onglet-sac-constantinople" ).on( "click", function(){
   drawTripMap('sacConstantinople')
+  overlay.draw()
+
 })
 
 
