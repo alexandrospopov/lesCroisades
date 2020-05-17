@@ -226,6 +226,22 @@ def makeArmyIcons(  jsonDirectory ):
       
       print( "  Wrote %s-%s" % ( armyId, imgName ))
 
+def rewriteMapJson( jsonDirectory ):
+
+  pathToMapJson = os.path.join( jsonDirectory, "cartes.json")
+  with open( pathToMapJson, 'r') as j:
+    mapJson = json.load( j )
+
+  for mapName in mapJson:
+    for category in [ 'Armees', 'Ville' ]:
+
+      l = mapJson[ mapName ][ category ][ category ]
+      listToReturn = [ l[ key ] for key in l ]
+      mapJson[ mapName ][ category ] = listToReturn
+  
+  print( mapJson)
+
+
 
 if __name__ == "__main__" : 
   
@@ -235,10 +251,13 @@ if __name__ == "__main__" :
   if not os.path.isdir( jsonDirectory ):
     os.mkdir( jsonDirectory )
 
-  translateExcel( rootDataDirectory, jsonDirectory, "armees" )
-  translateExcel( rootDataDirectory, jsonDirectory, "endroits" )
+  # translateExcel( rootDataDirectory, jsonDirectory, "armees" )
+  # translateExcel( rootDataDirectory, jsonDirectory, "endroits" )
+  # translateExcel( rootDataDirectory, jsonDirectory, "cartes" )
 
-  makeArmyIcons( jsonDirectory )
+  rewriteMapJson( jsonDirectory )
 
-  writeTripJson( jsonDirectory )
-  accountForIdenticalTrips( jsonDirectory )
+  # makeArmyIcons( jsonDirectory )
+
+  # writeTripJson( jsonDirectory )
+  # accountForIdenticalTrips( jsonDirectory )
