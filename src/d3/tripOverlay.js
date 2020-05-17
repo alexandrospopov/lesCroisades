@@ -13,7 +13,6 @@ var ne = 0;
 var selectedTimePeriodStart = 1096 * 360 
 var selectedTimePeriodEnd =  1098 * 360 ;
 var incrementAngular = 0;
-var overlay = new google.maps.OverlayView();
 
 var iconStopVisibility = true;
 var iconCityVisibility = true;
@@ -27,6 +26,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
     tripList = files[ 0 ]
     armyList = files[ 1 ]
     cityList = files[ 2 ]
+
+    var overlay = new google.maps.OverlayView();
+
 
     const armyPopulationScale = d3.scaleLinear()
                                   .range([2,20])
