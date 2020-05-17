@@ -233,15 +233,17 @@ def rewriteMapJson( jsonDirectory ):
     mapJson = json.load( j )
 
   for mapName in mapJson:
-    for category in [ 'Armees', 'Ville' ]:
+    for category in [ 'idArmees', 'idEndroits' ]:
 
       l = mapJson[ mapName ][ category ][ category ]
       listToReturn = [ l[ key ] for key in l ]
       mapJson[ mapName ][ category ] = listToReturn
   
-  print( mapJson)
 
+  with open( pathToMapJson, 'w') as fp:
+    json.dump( mapJson, fp)
 
+  print('Rewrote %s' % pathToMapJson )
 
 if __name__ == "__main__" : 
   
@@ -251,13 +253,13 @@ if __name__ == "__main__" :
   if not os.path.isdir( jsonDirectory ):
     os.mkdir( jsonDirectory )
 
-  # translateExcel( rootDataDirectory, jsonDirectory, "armees" )
-  # translateExcel( rootDataDirectory, jsonDirectory, "endroits" )
-  # translateExcel( rootDataDirectory, jsonDirectory, "cartes" )
+  translateExcel( rootDataDirectory, jsonDirectory, "armees" )
+  translateExcel( rootDataDirectory, jsonDirectory, "endroits" )
+  translateExcel( rootDataDirectory, jsonDirectory, "cartes" )
 
   rewriteMapJson( jsonDirectory )
 
-  # makeArmyIcons( jsonDirectory )
+  makeArmyIcons( jsonDirectory )
 
-  # writeTripJson( jsonDirectory )
-  # accountForIdenticalTrips( jsonDirectory )
+  writeTripJson( jsonDirectory )
+  accountForIdenticalTrips( jsonDirectory )
