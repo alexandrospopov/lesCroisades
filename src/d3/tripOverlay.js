@@ -104,10 +104,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
           .style( 'top', ne.y +'px' );
 
 
-        var tooltip = d3.select( "body" )
-                        .append( "div" )
-                        .attr( "class", "tooltip" )
-                        .style( "opacity", 0);
 
 
         selectedTripList = tripList.filter( 
@@ -184,23 +180,23 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         tripStops.each( drawTripStopMarker )
                  .attr( 'xlink:href', d => 'img/trips/' + d.armyId + '-' + d.stopCategory +'.svg')
-                 .each( drawTripStopMarker )
 
         tripStops.exit().remove()
 
-        layer.selectAll( '.marker' )
-               .data( cityListToShow )
-               .each( drawMarker )
-               .on( "mouseout" , d => hideToolTip())
-             .enter().append('image')
-               .attr( 'xlink:href', d => 'img/cities/' + d.value.Geographie.Etat +'.svg')
-               .attr('width', sizeLogo)
-               .attr('height', sizeLogo)
-               .attr( 'class', 'marker' )
-               .each( drawMarker)
-               .on( "mouseover" , d => visibleCityTooltip( d , tooltip, tripList ) )
-               .on( "mouseout" , d => hideToolTip())
+        var places = layer.selectAll( '.marker' )
+                          .data( cityListToShow )
 
+        var placesEnter = places.enter().append('image')
+                                .attr( 'xlink:href', d => 'img/cities/' + d.value.Geographie.Etat +'.svg')
+                                .attr('width', sizeLogo)
+                                .attr('height', sizeLogo)
+                                .attr( 'class', 'marker' )
+                                .on( "mouseover" , d => visibleCityTooltip( d , tooltip, tripList ) )
+                                .on( "mouseout" , d => hideToolTip())
+                                .each( drawMarker)
+                               
+        places.each( drawMarker )
+              .attr( 'xlink:href', d => 'img/cities/' + d.value.Geographie.Etat +'.svg')
 
 
 
@@ -431,6 +427,12 @@ function setStopIconVisibility( d ){
     d3.select(this).attr('visibility','hidden')
   }
 }
+
+
+var tooltip = d3.select( "body" )
+                .append( "div" )
+                .attr( "class", "tooltip" )
+                .style( "opacity", 0);
 
 
 d3.select("#cb_stop").on("click", function() {
