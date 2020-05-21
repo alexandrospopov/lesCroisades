@@ -34,11 +34,13 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
       d3.selectAll('.marker').remove()
 
+    console.log(mapDict)
+    console.log(armyList)
 
     var divArmyChoice = d3.select('#armyChoice')
 
     var divArmyChoiceCheckBox = divArmyChoice.selectAll(' .checkBoxDiv')
-                                              .data( d3.entries(armyList) ) 
+                                .data( d3.entries(mapDict[ mapName ].idArmees) ) 
 
     var divArmyChoiceCheckBoxEnter = divArmyChoiceCheckBox.enter()
                  .append('div')
@@ -47,9 +49,10 @@ Promise.all([ d3.json( "src/json/trips.json" ),
     divArmyChoiceCheckBoxEnter.append('input')
                               .attr('class','checkBoxDiv_cb')
                               .attr('type','checkbox')
-                              .attr('id', d => 'cb_'+ d.value.admin.id )
-                              .attr('name', d=> d.value.admin.fullName )
-                              .attr('value', d=> d.value.admin.fullName )
+                              .attr('id', d => 'cb_'+ d )
+                              .attr('name', d=>  { console.log(d);  
+                                 return armyList[ d.value ].admin.fullName } )
+                              .attr('value', d=> armyList[ d.value ].admin.fullName )
                               .attr('checked', "checked" )
                               .on('click', function( d ){
                                 let currentVisibility = this.checked ? "visible" : "hidden";
@@ -66,7 +69,9 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
     divArmyChoiceCheckBoxEnter.append('label')
                               .attr( 'class','checkBoxDiv_label' )
-                              .html( d=> d.value.admin.fullName )
+                              .html( d=> armyList[ d.value ].admin.fullName )
+
+    divArmyChoiceCheckBox.exit().remove()
 
 
     bounds = setBounds( d3.entries(cityList) )
