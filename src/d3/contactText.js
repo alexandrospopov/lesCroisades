@@ -17,5 +17,5 @@ function getContactText(){
 
 
 function getAuthorText(){
-  return   'Cette outil a été réalisé par : '
+  return   'Cet outil a été réalisé par : '
 }
