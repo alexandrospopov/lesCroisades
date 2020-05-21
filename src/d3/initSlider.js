@@ -3,7 +3,9 @@
 var marginTop = 150;
 var marginSides = 20
 var marginRight = 80
-var width = 700 - marginSides * 2;
+var divWidth = document.getElementById("informationPanel").offsetWidth
+var divHeight = document.getElementById("informationPanel").offsetHeight
+var width = divWidth - marginSides * 4;
 var height = 340 - marginTop;
 
 var timeDomain = [ 1096*360, 1098*360 ]
