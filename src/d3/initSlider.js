@@ -69,10 +69,6 @@ function initializeSlider( mapName ){
       overlay.draw()
       updateTimePrint( range )
       }
-  
-
-
-
     
     })
 
@@ -89,6 +85,9 @@ function updateSlider( mapName ){
       .domain( mapDict[mapName].admin.dates)
       .range([0, width]);
   
+
+    updateTimePrint( mapDict[mapName].admin.dates  )
+    
     let sliderSvg = d3.select("#timeSliderSvg")
                       .call(d3.axisBottom()
                               .scale( timeDomain )
