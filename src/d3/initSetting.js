@@ -32,7 +32,7 @@ function setStopIconVisibility( d ){
 function printHelpAndContactInfo(){
 
   let modal = document.getElementById("myModalContact");
-  let span = document.getElementsByClassName("close")[0];
+  let span = document.getElementById("contact-close");
   let modalTitle = document.getElementById("modal-contact-Title");
   let modalParagraph = document.getElementById("modal-contact-Paragraph1")
   let modalParagraph2 = document.getElementById("modal-contact-Paragraph2")

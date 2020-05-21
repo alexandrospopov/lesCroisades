@@ -329,7 +329,7 @@ function setNorthEast( projection,  bounds, padding){
 function printTripInformations( trip ){
 
   var modal = document.getElementById("myModalMap");
-  var span = document.getElementsByClassName("close")[0];
+  var span = document.getElementById("map-close");
   var modalTitle = document.getElementById("modal-map-Title")
   var modalDates = document.getElementById("modal-map-Dates")
   var modalParagraph = document.getElementById("modal-map-Paragraph")
