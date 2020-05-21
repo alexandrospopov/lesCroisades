@@ -47,8 +47,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                               .attr('class','checkBoxDiv_cb')
                               .attr('type','checkbox')
                               .attr('id', d => 'cb_'+ d.value )
-                              .attr('name', d=>  { console.log(d);  
-                                 return armyList[ d.value ].admin.fullName } )
+                              .attr('name', d=>  armyList[ d.value ].admin.fullName )
                               .attr('value', d=> armyList[ d.value ].admin.fullName )
                               .attr('checked', "checked" )
                               .on('click', function( d ){
