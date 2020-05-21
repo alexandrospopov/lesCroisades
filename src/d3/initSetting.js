@@ -1,3 +1,6 @@
+var armyStopGlobalVisibility = "visible"
+
+
 function updateNavLinkColor( idNavLink){
 
   d3.select("#onglet-croisadesPopulaires").style('color','white')
@@ -17,8 +20,6 @@ function updateMapChoice( mapName ){
 function setStopIconVisibility(){
   let armyVisibility = d3.select(this).attr('army-visibility')
   let globalVisibility = d3.select(this).attr('global-visibility')
-  // console.log( armyVisibility )
-  // console.log( globalVisibility )
 
   if ( armyVisibility == "visible" && globalVisibility == "visible" ) 
   {
@@ -69,9 +70,11 @@ function printHelpAndContactInfo(){
 d3.select("#cb_stop")
   .on("click", function() {
       let currentVisibility = this.checked ? "visible" : "hidden";
-      d3.selectAll('.tripStop')
-        .attr('global-visibility',currentVisibility )
-        .each( setStopIconVisibility )
+      armyStopGlobalVisibility = currentVisibility
+      overlay.draw()
+      // d3.selectAll('.tripStop')
+      //   .attr('global-visibility',currentVisibility )
+      //   .each( setStopIconVisibility )
 
 });
 

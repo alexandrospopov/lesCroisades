@@ -163,7 +163,23 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         tripStops.each( drawTripStopMarker )
                  .attr( 'xlink:href', d => 'img/trips/' + d.armyId + '-' + d.stopCategory +'.svg')
-                 .attr('visibility' , trip => armyList[ trip.armyId ].admin.visibility )
+                 .attr('visibility' , trip => {
+                    if ( armyList[ trip.armyId ].admin.visibility == "visible" 
+                         && 
+                         armyStopGlobalVisibility == "visible" ) 
+                    {
+                      return "visible"
+                    }
+                    else
+                    {
+                      return "hidden"
+                    }
+
+                  
+                  }
+                   
+                   
+                   )
                 //  .each( setStopIconVisibility )
 
         tripStops.exit().remove()
