@@ -87,11 +87,18 @@ function updateSlider( mapName ){
       .domain( mapDict[mapName].admin.dates)
       .range([0, width]);
   
-    d3.select("#timeSliderSvg")
-      .call(d3.axisBottom()
-              .scale( timeDomain )
-              .tickFormat( d => deduceMonthAndYear( d ) )            
-              .ticks(4));
+    let sliderSvg = d3.select("#timeSliderSvg")
+                      .call(d3.axisBottom()
+                              .scale( timeDomain )
+                              .tickFormat( d => deduceMonthAndYear( d ) )            
+                              .ticks(4));
+
+    sliderSvg.selectAll("text")  
+       .style("text-anchor", "start")
+       .attr("font-size", 15)
+       .attr("dx", "0.6em")
+       .attr("dy", ".15em")
+       .attr("transform", "rotate(-65)" );
 
   })
 
