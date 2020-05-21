@@ -13,7 +13,7 @@
 }
 
 /* Modal Content/Box */
-.modal-content {
+.modal-map {
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
@@ -36,6 +36,9 @@
   cursor: pointer;
 } 
 
-.modal-content h1, h2, p{
+.modal-map h1, h2, p{
+  text-align: center;
+}
+.modal-contact h1, h2, p, a{
   text-align: center;
 }

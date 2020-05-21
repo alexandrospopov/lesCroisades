@@ -39,7 +39,7 @@
             <a class="nav-link" id="onglet-sacConstantinople" href="#"> Le sac de Constantinople </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
+            <a class="nav-link" id="onglet-aideContact" href="#">Contact</a>
           </li>
         </ul>
       </div>
@@ -74,22 +74,35 @@
     </div>
 
     <!-- The Modal -->
-    <div id="myModal" class="modal">
+    <div id="myModalMap" class="modal">
     
       <!-- Modal content -->
-      <div class="modal-content">
+      <div class="modal-map">
         <span class="close">&times;</span>
-        <h2 id="modalTitle"> </h2>
-        <h2 id="modalDates">  </h2>
-        <p id='modalParagraph'></p>
+        <h2 id="modal-map-Title"> </h2>
+        <h2 id="modal-map-Dates">  </h2>
+        <p id='modal-map-Paragraph'></p>
       </div>
     </div>
+
+    <!-- <div id="myModalContact" class="modal"> -->
+    <!-- <div class="modal-contact">
+        <span class="close">&times;</span>
+        <h2 id="modal-contact-Title"> </h2>
+        <p id='modal-contact-Paragraph1'></p>
+        <p id='modal-contact-Paragraph2'></p>
+        <a id='modal-contact-Author1'>sfsfsd</a>
+        <a id='modal-contact-Author2'>sfsfsd</a>
+      </div> -->
+    <!-- </div> -->
+
 
 
     <script src="https://maps.google.com/maps/api/js?key=AIzaSyB5vxIotxWuHuiY7yFfJZbUOSDSa8d95gI"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.25/gmaps.js"></script>
     <script src="src/d3/initGoogleMap.js"></script>
 
+    <script src="src/d3/contactText.js"></script>
     <script src="src/d3/initSetting.js"></script>
     <script src="src/d3/initSlider.js"></script>
     <script src="src/d3/initMapViz.js"></script>

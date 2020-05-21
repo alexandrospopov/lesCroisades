@@ -328,9 +328,9 @@ function setNorthEast( projection,  bounds, padding){
 
 function printTripInformations( trip ){
 
-  var modal = document.getElementById("myModal");
+  var modal = document.getElementById("myModalMap");
   var span = document.getElementsByClassName("close")[0];
-  var modalParagraph = document.getElementById("modalParagraph")
+  var modalParagraph = document.getElementById("modal-map-Paragraph")
 
   modalTitle.textContent = trip.armyName + " : De " + trip.cityNameTripStart + " vers " + trip.cityNameTripEnd; 
   modalDates.textContent = trip.timeTripText;

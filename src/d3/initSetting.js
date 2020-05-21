@@ -29,6 +29,39 @@ function setStopIconVisibility( d ){
 }
 
 
+function printHelpAndContactInfo(){
+
+  var modal = document.getElementById("myModalContact");
+  var span = document.getElementsByClassName("close")[0];
+  var modalTitle = document.getElementById("modal-contact-Title");
+  var modalParagraph = document.getElementById("modal-contact-Paragraph1")
+  var modalParagraph2 = document.getElementById("modal-contact-Paragraph2")
+  var author1 = document.getElementById("modal-contact-Author1")
+  var author2 = document.getElementById("modal-contact-Author2")
+
+  modalTitle.textContent = getContactTitle() ; 
+  modalParagraph.textContent = getContactText() ;
+  modalParagraph2.textContent = getAuthorText();
+
+  author1.textContent='Herodot\'com'
+  author1.href='https://www.youtube.com/channel/UCWWzB99AURYo2KLzCReWqmA'
+
+  author2.textContent='Alexandros Popov'
+  author2.href='https://github.com/alexandrospopov'
+
+  modal.style.display = "block";
+
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+}
+
 
 
 d3.select("#cb_stop")
@@ -60,4 +93,9 @@ d3.select( "#onglet-deuxiemeCroisade" )
 d3.select( "#onglet-sacConstantinople" )
   .on( "click", function(){
       updateMapChoice( "sacConstantinople" )
+})
+
+d3.select( "#onglet-aideContact" )
+  .on( "click", function(){
+    printHelpAndContactInfo()
 })
