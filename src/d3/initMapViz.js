@@ -34,9 +34,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
       d3.selectAll('.marker').remove()
 
-    console.log(mapDict)
-    console.log(armyList)
-
     var divArmyChoice = d3.select('#armyChoice')
 
     var divArmyChoiceCheckBox = divArmyChoice.selectAll(' .checkBoxDiv')
@@ -56,7 +53,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                               .attr('checked', "checked" )
                               .on('click', function( d ){
                                 let currentVisibility = this.checked ? "visible" : "hidden";
-                                d['value']['admin']['visibility'] = currentVisibility
+                                armyList[d.value]['admin']['visibility'] = currentVisibility
                                 d3.selectAll( '.link')
                                   .filter( e=> { return d.key == e.armyId } )
                                   .attr('visibility', currentVisibility)
