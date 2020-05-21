@@ -14,9 +14,11 @@ function updateMapChoice( mapName ){
   overlay.draw()
 }
 
-function setStopIconVisibility( d ){
+function setStopIconVisibility(){
   let armyVisibility = d3.select(this).attr('army-visibility')
   let globalVisibility = d3.select(this).attr('global-visibility')
+  // console.log( armyVisibility )
+  // console.log( globalVisibility )
 
   if ( armyVisibility == "visible" && globalVisibility == "visible" ) 
   {

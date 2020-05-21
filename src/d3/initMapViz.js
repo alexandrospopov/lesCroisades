@@ -53,13 +53,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                               .on('click', function( d ){
                                 let currentVisibility = this.checked ? "visible" : "hidden";
                                 armyList[d.value]['admin']['visibility'] = currentVisibility
-                                d3.selectAll( '.link')
-                                  .filter( e=> { return d.key == e.armyId } )
-                                  .attr('visibility', currentVisibility)
-                                d3.selectAll('.tripStop')
-                                  .filter( e=> { return d.key == e.armyId } )
-                                  .attr('army-visibility', currentVisibility)
-                                  .each( setStopIconVisibility )
                                 overlay.draw()
                               })
 
@@ -163,7 +156,6 @@ Promise.all([ d3.json( "src/json/trips.json" ),
                                               .attr( 'class', 'tripStop' )
                                               .attr('army-visibility' , "visible")
                                               .attr('global-visibility' , "visible")
-                                              .attr('visibility', trip => armyList[ trip.armyId ].admin.visibility )
                                               .on("mouseover", trip => visibleTripTooltip(trip ))
                                               .on("click", trip => { printTripInformations( trip ) } )
                                               .on("mouseout", () => hideToolTip());
@@ -171,6 +163,8 @@ Promise.all([ d3.json( "src/json/trips.json" ),
 
         tripStops.each( drawTripStopMarker )
                  .attr( 'xlink:href', d => 'img/trips/' + d.armyId + '-' + d.stopCategory +'.svg')
+                 .attr('visibility' , trip => armyList[ trip.armyId ].admin.visibility )
+                //  .each( setStopIconVisibility )
 
         tripStops.exit().remove()
 
