@@ -422,6 +422,13 @@ function updateNavLinkColor( idNavLink){
   d3.select("#onglet-" + idNavLink ).style('color','blue')
 }
 
+function updateMapChoice( mapName ){
+  drawTripMap( mapName )
+  updateSlider( mapName )
+  updateNavLinkColor( mapName )
+  overlay.draw()
+}
+
 var tooltip = d3.select( "body" )
                 .append( "div" )
                 .attr( "class", "tooltip" )
@@ -442,30 +449,19 @@ d3.select("#cb_stop").on("click", function() {
  });
  
  d3.select( "#onglet-croisadesPopulaires" ).on( 'click' , function(){
-  
-  drawTripMap( "croisadesPopulaires" )
-  updateSlider( "croisadesPopulaires" )
-  updateNavLinkColor( "croisadesPopulaires")
-  overlay.draw()
-
+  updateMapChoice( "croisadesPopulaires" )
  })
 
  d3.select( "#onglet-deuxiemeCroisade" ).on( "click", function(){
-   drawTripMap('deuxiemeCroisade')
-   updateSlider('deuxiemeCroisade')
-   updateNavLinkColor( "deuxiemeCroisade")
-   overlay.draw()
+  updateMapChoice( "deuxiemeCroisade" )
  })
  
 
  d3.select( "#onglet-sacConstantinople" ).on( "click", function(){
-  drawTripMap('sacConstantinople')
-  updateSlider('sacConstantinople')
-  updateNavLinkColor( "sacConstantinople")
-  overlay.draw()
-
+  updateMapChoice( "sacConstantinople" )
 })
 
 
 drawTripMap( "croisadesPopulaires" )
+updateNavLinkColor( "croisadesPopulaires" )
 initializeSlider( "croisadesPopulaires" )
