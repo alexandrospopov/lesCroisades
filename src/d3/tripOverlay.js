@@ -428,32 +428,27 @@ var tooltip = d3.select( "body" )
 
 
 d3.select("#cb_stop").on("click", function() {
-  let currentVisibility = this.checked ? "visible" : "hidden";
-  d3.selectAll('.tripStop')
-    .attr('global-visibility',currentVisibility )
-    .each( setStopIconVisibility )
+let currentVisibility = this.checked ? "visible" : "hidden";
+d3.selectAll('.tripStop')
+  .attr('global-visibility',currentVisibility )
+  .each( setStopIconVisibility )
 
- });
- d3.select("#cb_cities").on("click", function() {
-  let currentVisibility = this.checked ? "visible" : "hidden";
-  d3.selectAll('.marker').attr('visibility',currentVisibility)
-  // overlay.draw()
- });
- 
- d3.select( "#onglet-croisadesPopulaires" ).on( 'click' , function(){
-  updateMapChoice( "croisadesPopulaires" )
- })
+});
+d3.select("#cb_cities").on("click", function() {
+let currentVisibility = this.checked ? "visible" : "hidden";
+d3.selectAll('.marker').attr('visibility',currentVisibility)
+// overlay.draw()
+});
 
- d3.select( "#onglet-deuxiemeCroisade" ).on( "click", function(){
-  updateMapChoice( "deuxiemeCroisade" )
- })
- 
+d3.select( "#onglet-croisadesPopulaires" ).on( 'click' , function(){
+updateMapChoice( "croisadesPopulaires" )
+})
 
- d3.select( "#onglet-sacConstantinople" ).on( "click", function(){
-  updateMapChoice( "sacConstantinople" )
+d3.select( "#onglet-deuxiemeCroisade" ).on( "click", function(){
+updateMapChoice( "deuxiemeCroisade" )
 })
 
 
-drawTripMap( "croisadesPopulaires" )
-updateNavLinkColor( "croisadesPopulaires" )
-initializeSlider( "croisadesPopulaires" )
+d3.select( "#onglet-sacConstantinople" ).on( "click", function(){
+updateMapChoice( "sacConstantinople" )
+})
