@@ -1,11 +1,3 @@
-// Create the Google Map…
-var map = new google.maps.Map(d3.select("#googleMap").node(), {
-  zoom: 4,
-  center: new google.maps.LatLng(38.11666, 13.36666 ),
-  mapTypeId: google.maps.MapTypeId.TERRAIN
-});
-
-
 minimalRadius = 10
 sizeLogo = 40
 var sw = 0;
