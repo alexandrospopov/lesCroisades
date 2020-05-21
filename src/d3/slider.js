@@ -6,6 +6,8 @@ var marginRight = 80
 var width = 700 - marginSides * 2;
 var height = 340 - marginTop;
 
+var timeDomain = [ 1096*360, 1098*360 ]
+
 function initializeSlider( mapName ){
 
 
@@ -14,41 +16,40 @@ function initializeSlider( mapName ){
     mapDict = files[ 0 ]
      
 
-      let x = d3.scaleLinear()
-      .domain( mapDict[mapName].admin.dates)
-      .range([0, width]);
-  
-    var brush = d3.brushX()
-      .extent([[0,0], [width,height]])
-      .on("brush", brushed);
+    timeDomain = d3.scaleLinear()
+                   .domain( mapDict[mapName].admin.dates)
+                   .range([0, width]);
   
     var svg = d3.select("#timeSlider").append("svg")
-      .attr("width", width + marginSides + marginRight)
-      .attr("height", height + marginTop)
-    .append("g")
-    .attr('id',"timeSliderSvg")
-    .attr("transform", "translate(" + marginSides + "," + marginTop + ")")
-      .call(d3.axisBottom()
-              .scale(x)
-              .tickFormat( d => deduceMonthAndYear( d ) )            
-              .ticks(4));
+                .attr("width", width + marginSides + marginRight)
+                .attr("height", height + marginTop)
+                .append("g")
+                .attr('id',"timeSliderSvg")
+                .attr("transform", "translate(" + marginSides + "," + marginTop + ")")
+                .call(d3.axisBottom()
+                        .scale(timeDomain)
+                        .tickFormat( d => deduceMonthAndYear( d ) )            
+                        .ticks(4));
     
     svg.selectAll("text")  
-              .style("text-anchor", "start")
-              .attr("font-size", 15)
-              .attr("dx", "0.6em")
-              .attr("dy", ".15em")
-              .attr("transform", "rotate(-65)" );
+       .style("text-anchor", "start")
+       .attr("font-size", 15)
+       .attr("dx", "0.6em")
+       .attr("dy", ".15em")
+       .attr("transform", "rotate(-65)" );
   
   
-            
+    var brush = d3.brushX()
+       .extent([[0,0], [width,height]])
+       .on("brush", brushed);
+
     var brushg = svg.append("g")
-      .attr("class", "brush")
-      .call( brush ) 
+                    .attr("class", "brush")
+                    .call( brush ) 
   
     function brushed() {
-        var range = d3.brushSelection(this)
-                      .map(x.invert);
+      let range = d3.brushSelection(this)
+                    .map( timeDomain.invert );
   
       selectedTimePeriodStart = range[0]
       selectedTimePeriodEnd = range[1]
@@ -56,7 +57,6 @@ function initializeSlider( mapName ){
       updateTimePrint( range )
       }
   
-    // brush.move(brushg, [ timeStampStart, timeStampEnd ].map(x));
     })
 
 }
@@ -68,21 +68,17 @@ function updateSlider( mapName ){
   {
     mapDict = files[ 0 ]
 
-    console.log( mapDict[mapName].admin.dates )
-     
-      let x = d3.scaleLinear()
+    timeDomain = d3.scaleLinear()
       .domain( mapDict[mapName].admin.dates)
       .range([0, width]);
   
     d3.select("#timeSliderSvg")
       .call(d3.axisBottom()
-              .scale(x)
+              .scale( timeDomain )
               .tickFormat( d => deduceMonthAndYear( d ) )            
               .ticks(4));
-    
-  
-    // brush.move(brushg, [ timeStampStart, timeStampEnd ].map(x));
-    })
+
+  })
 
 
 }
