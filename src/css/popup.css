@@ -13,7 +13,7 @@
 }
 
 /* Modal Content/Box */
-.modal-map {
+.modal-map, .modal-contact{
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
@@ -39,6 +39,11 @@
 .modal-map h1, h2, p{
   text-align: center;
 }
+
 .modal-contact h1, h2, p, a{
   text-align: center;
+}
+
+#modal-contact-Author1, #modal-contact-Author2{
+  align: center;
 }
