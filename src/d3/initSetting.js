@@ -31,13 +31,13 @@ function setStopIconVisibility( d ){
 
 function printHelpAndContactInfo(){
 
-  var modal = document.getElementById("myModalContact");
-  var span = document.getElementsByClassName("close")[0];
-  var modalTitle = document.getElementById("modal-contact-Title");
-  var modalParagraph = document.getElementById("modal-contact-Paragraph1")
-  var modalParagraph2 = document.getElementById("modal-contact-Paragraph2")
-  var author1 = document.getElementById("modal-contact-Author1")
-  var author2 = document.getElementById("modal-contact-Author2")
+  let modal = document.getElementById("myModalContact");
+  let span = document.getElementsByClassName("close")[0];
+  let modalTitle = document.getElementById("modal-contact-Title");
+  let modalParagraph = document.getElementById("modal-contact-Paragraph1")
+  let modalParagraph2 = document.getElementById("modal-contact-Paragraph2")
+  let author1 = document.getElementById("modal-contact-Author1")
+  let author2 = document.getElementById("modal-contact-Author2")
 
   modalTitle.textContent = getContactTitle() ; 
   modalParagraph.textContent = getContactText() ;
