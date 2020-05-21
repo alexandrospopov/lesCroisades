@@ -49,7 +49,7 @@ Promise.all([ d3.json( "src/json/trips.json" ),
     divArmyChoiceCheckBoxEnter.append('input')
                               .attr('class','checkBoxDiv_cb')
                               .attr('type','checkbox')
-                              .attr('id', d => 'cb_'+ d )
+                              .attr('id', d => 'cb_'+ d.value )
                               .attr('name', d=>  { console.log(d);  
                                  return armyList[ d.value ].admin.fullName } )
                               .attr('value', d=> armyList[ d.value ].admin.fullName )
