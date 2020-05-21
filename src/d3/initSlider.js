@@ -8,6 +8,15 @@ var height = 340 - marginTop;
 
 var timeDomain = [ 1096*360, 1098*360 ]
 
+
+function updateTimePrint( range ){
+
+  let p = document.getElementById("timePrint");
+  p.textContent =   deduceMonthAndYear( range[0] ) + ' - ' + deduceMonthAndYear( range[ 1 ] )
+
+}
+
+
 function initializeSlider( mapName ){
 
 
@@ -46,7 +55,9 @@ function initializeSlider( mapName ){
     var brushg = svg.append("g")
                     .attr("class", "brush")
                     .call( brush ) 
-  
+
+    updateTimePrint( mapDict[mapName].admin.dates  )
+                    
     function brushed() {
       let range = d3.brushSelection(this)
                     .map( timeDomain.invert );
@@ -57,6 +68,10 @@ function initializeSlider( mapName ){
       updateTimePrint( range )
       }
   
+
+
+
+    
     })
 
 }
@@ -105,10 +120,4 @@ function deduceMonthAndYear( timeStamp ){
   return day + " " + month + " " + year 
 }
 
-function updateTimePrint( range ){
-
-  let p = document.getElementById("timePrint");
-  p.textContent =   deduceMonthAndYear( range[0] ) + ' - ' + deduceMonthAndYear( range[ 1 ] )
-
-}
 
